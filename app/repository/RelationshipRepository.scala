@@ -1,59 +1,72 @@
 package repository
 
-import model.RelationshipType
+import model.{RelationshipTypeFinder, RelationshipType}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.Future
 
 trait RelationshipRepository {
 
-  def create(relationshipType: RelationshipType, userId: Long): Future[Boolean]
+  def create(relationshipType: RelationshipType, id1: Long, id2: Long): Future[Boolean]
 
-  def delete(relationshipType: RelationshipType, userId: Long): Future[Boolean]
+  def delete(relationshipType: RelationshipType, id1: Long, id2: Long): Future[Boolean]
 
-  def find(relationshipType: RelationshipType, userId: Long): Future[List[Long]]
+  def find(relationshipType: RelationshipType, id: Long): Future[List[Option[Long]]]
 
-  def findAll(userId: Long): Future[List[Long]]
+  def findAll: Future[List[Option[Long]]]
 
 }
 
-object DefaultRelationshipRepository {
+object NeoRelationshipRepository extends RelationshipRepository {
 
   import org.anormcypher._
 
   implicit val connection = Neo4jREST()
 
-  def findAll(userId: Long): Future[List[Option[Long]]] = Future {
-    val req: CypherStatement = Cypher( """ MATCH (u:Social) RETURN u.id """)
+  val socialTag = "Social"
+
+  def findAll: Future[List[Option[Long]]] = Future {
+    val req: CypherStatement = Cypher( """ MATCH (a:{tag}) RETURN a.id """).on("tag" -> socialTag)
+    userListFromStream(req)
+  }
+
+  def find(relationshipType: RelationshipType, id: Long): Future[List[Option[Long]]] = Future {
+    val relationship = relationshipType.toString.toUpperCase
+    // TODO: Report issue to AnormCypher
+    //    val req: CypherStatement = Cypher( """ MATCH (a:{tag})-[:`{relationship}`]->(b) WHERE a.id={userId} RETURN u.id """)
+    //      .on("tag" -> socialTag)
+    //      .on("relationship" -> relationship)
+    //      .on("userId" -> id)
+    val query = "MATCH (a:" + socialTag + ")-[:" + relationship + "]->(b) WHERE a.id={userId} RETURN b.id"
+    val req: CypherStatement = Cypher(query).on("userId" -> id)
+    userListFromStream(req)
+  }
+
+  private def userListFromStream(req: CypherStatement): List[Option[Long]] = {
     val stream: Stream[CypherResultRow] = req()
-    stream.map(row => {
-      row[Option[Long]]("u.id")
-    }).toList
+    stream.map(row => { row[Option[Long]]("b.id") }).toList
   }
 
-  def find(relationshipType: RelationshipType, userId: Long): Future[List[Option[Long]]] = Future {
-    // TODO: Take relationship from the param
-    val req: CypherStatement = Cypher( """ MATCH (a:Social)-[:`{relationship}`]->(b) RETURN u.id """)
-      .on("relationship" -> "FRIEND")
-    val stream: Stream[CypherResultRow] = req()
-    stream.map(row => {
-      row[Option[Long]]("u.id")
-    }).toList
+  def create(relationshipType: RelationshipType, id1: Long, id2: Long): Future[Boolean] = Future {
+    val relationship = relationshipType.toString.toUpperCase
+    val query = "MATCH (a:" + socialTag + "),(b:" + socialTag + ") " +
+      "WHERE a.id={id1} AND b.id={id2} " +
+      "CREATE (a)-[r:" + relationship + "]->(b) " +
+      "RETURN b"
+    val st: CypherStatement = Cypher(query)
+      .on("id1" -> id1)
+      .on("id2" -> id2)
+
+    println("QUERY >> " + st.query)
+
+    st.execute()
+//    Cypher(query)
+//      .on("id1" -> id1)
+//      .on("id2" -> id2)
+//      .execute()
   }
 
-  def create(relationshipType: RelationshipType, userId: Long): Future[Boolean] = Future {
-    Cypher( """ CREATE (u:Social { id: {userId}, email: "gvolpe@github.com", company: "GitHub"}) """)
-    true
-  }
-
-  def delete(relationshipType: RelationshipType, userId: Long): Future[Boolean] = Future {
+  def delete(relationshipType: RelationshipType, id1: Long, id2: Long): Future[Boolean] = Future {
     false
   }
-
-  // create some test nodes
-  //  Cypher(
-  //    """ CREATE (a:User { username: "gvolpe", email: "gvolpe@github.com", company: "GitHub"}),
-  //               (b:User { username: "hcarbone", email: "hcarbone@github.com", company: "GitHub"}),
-  //               (c:User { username: "ncavallo", email: "ncavallo@github.com", company: "GitHub"})
-  //    """).execute()
 
 }
