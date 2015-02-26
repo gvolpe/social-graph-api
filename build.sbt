@@ -12,5 +12,6 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.anormcypher" %% "anormcypher" % "0.6.0"
+  "org.anormcypher" %% "anormcypher" % "0.6.0",
+  "com.mohiva" %% "play-silhouette" % "1.0"
 )
