@@ -1,23 +1,28 @@
 package controllers
 
-import com.mohiva.play.silhouette.contrib.services.CachedCookieAuthenticator
-import com.mohiva.play.silhouette.core.{Environment, Silhouette}
+import controllers.auth.AuthenticatorController
 import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.mvc._
 import repository.NeoRelationshipRepository
 
-// TODO: Authenticated
-object RelationshipController extends Silhouette[User, CachedCookieAuthenticator] {
+import scala.concurrent.Future
 
-  implicit val env: Environment[User, CachedCookieAuthenticator] = ???
+object RelationshipController extends AuthenticatorController {
 
   // TODO: Get user id from the session
   val defaultUserId: Long = 1
   val repo = NeoRelationshipRepository
 
-  def findFollowers = Action.async { implicit request =>
+  def signIn = UserAwareAction.async { implicit request =>
+    request.identity match {
+      case Some(user) => Future.successful(Redirect(routes.Application.index))
+      case None => Future.successful(BadRequest(Json.toJson("Incorrect credentials.")))
+    }
+  }
+
+  def findFollowers = SecuredAction.async { implicit request =>
     val followers = repo.find(Follower, defaultUserId)
     followers.map( ids => Ok(Json.toJson(ids)) )
   }

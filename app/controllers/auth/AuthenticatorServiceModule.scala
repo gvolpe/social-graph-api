@@ -1,20 +1,15 @@
-package service
+package controllers.auth
 
-import com.mohiva.play.silhouette.contrib.services.{CachedCookieAuthenticator, CachedCookieAuthenticatorService, CachedCookieAuthenticatorSettings}
-import com.mohiva.play.silhouette.contrib.utils.{PlayCacheLayer, SecureRandomIDGenerator}
+import com.mohiva.play.silhouette.contrib.services.{CachedCookieAuthenticatorSettings, CachedCookieAuthenticatorService, CachedCookieAuthenticator}
 import com.mohiva.play.silhouette.core.services.AuthenticatorService
-import com.mohiva.play.silhouette.core.utils.Clock
+import com.mohiva.play.silhouette.core.utils.{IDGenerator, CacheLayer, Clock}
 import play.api.Play
+import play.api.Play.current
 
-object AuthenticationServiceProvider {
+trait AuthenticatorServiceModule {
 
-  val cacheLayer = new PlayCacheLayer
-  val idGenerator = new SecureRandomIDGenerator()
-
-  val userService: UserService = new DefaultUserService
-
-  val authenticatorService: AuthenticatorService[CachedCookieAuthenticator] = {
-    new CachedCookieAuthenticatorService(CachedCookieAuthenticatorSettings(
+  lazy val authenticatorService: AuthenticatorService[CachedCookieAuthenticator] = new CachedCookieAuthenticatorService(
+    CachedCookieAuthenticatorSettings(
       cookieName = Play.configuration.getString("silhouette.authenticator.cookieName").get,
       cookiePath = Play.configuration.getString("silhouette.authenticator.cookiePath").get,
       cookieDomain = Play.configuration.getString("silhouette.authenticator.cookieDomain"),
@@ -23,7 +18,13 @@ object AuthenticationServiceProvider {
       cookieIdleTimeout = Play.configuration.getInt("silhouette.authenticator.cookieIdleTimeout").get,
       cookieAbsoluteTimeout = Play.configuration.getInt("silhouette.authenticator.cookieAbsoluteTimeout"),
       authenticatorExpiry = Play.configuration.getInt("silhouette.authenticator.authenticatorExpiry").get
-    ), cacheLayer, idGenerator, Clock())
-  }
+    ),
+    cacheLayer,
+    idGenerator,
+    Clock()
+  )
+
+  def cacheLayer: CacheLayer
+  def idGenerator: IDGenerator
 
 }

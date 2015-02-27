@@ -20,8 +20,9 @@ object Global extends GlobalSettings with SecuredSettings {
    * @return The result to send to the client.
    */
   override def onNotAuthenticated(request: RequestHeader, lang: Lang): Option[Future[Result]] = {
-    Some(Future { Unauthorized(Json.toJson(BadRequest("credentials not correct"))) })
+    Some(Future { Unauthorized(Json.toJson("credentials not correct")) })
   }
+
   /**
    * Called when a user is authenticated but not authorized.
    *
@@ -32,7 +33,7 @@ object Global extends GlobalSettings with SecuredSettings {
    * @return The result to send to the client.
    */
   override def onNotAuthorized(request: RequestHeader, lang: Lang): Option[Future[Result]] = {
-    Some(Future { Unauthorized(Json.toJson(BadRequest("credentials not correct"))) })
+    Some(Future { Unauthorized(Json.toJson("credentials not correct")) })
   }
 
   /**
@@ -42,9 +43,9 @@ object Global extends GlobalSettings with SecuredSettings {
   override def onError(request: RequestHeader, ex: Throwable) = {
     Future.successful {
       if (play.api.Play.current.mode == Mode.Dev)
-        InternalServerError(Json.toJson(BadRequest("Internal server error " + ex.getMessage)))
+        InternalServerError(Json.toJson("Internal server error " + ex.getMessage))
       else
-        InternalServerError(Json.toJson(BadRequest("Oh oh o.O")))
+        InternalServerError(Json.toJson("Oh oh o.O"))
     }
   }
 

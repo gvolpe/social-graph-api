@@ -7,7 +7,7 @@ GET     /                                   controllers.Application.index
 
 # Authentication
 
-POST    /login                              controllers.Application.login
+POST    /login                              controllers.RelationshipController.signIn
 
 # Social Graph API
 
