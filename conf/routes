@@ -3,11 +3,12 @@
 # ~~~~
 
 # Home page
-GET     /                                   controllers.Application.index
+GET     /                                   controllers.AuthController.index
 
 # Authentication
 
-POST    /login                              controllers.RelationshipController.signIn
+POST    /auth/signin                        controllers.AuthController.signIn
+POST    /auth/signup                        controllers.AuthController.signUp
 
 # Social Graph API
 

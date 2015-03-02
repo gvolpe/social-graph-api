@@ -8,10 +8,11 @@ scalaVersion := "2.11.5"
 
 resolvers ++= Seq(
   "anormcypher" at "http://repo.anormcypher.org/",
-  "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
+  "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/",
+  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
 
 libraryDependencies ++= Seq(
   "org.anormcypher" %% "anormcypher" % "0.6.0",
-  "com.mohiva" %% "play-silhouette" % "1.0"
+  "com.mohiva" %% "play-silhouette" % "2.0-RC1"
 )

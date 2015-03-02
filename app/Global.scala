@@ -1,4 +1,4 @@
-import com.mohiva.play.silhouette.core.SecuredSettings
+import com.mohiva.play.silhouette.api.SecuredSettings
 import play.api.{Mode, GlobalSettings}
 import play.api.i18n.Lang
 import play.api.libs.concurrent.Execution.Implicits.defaultContext

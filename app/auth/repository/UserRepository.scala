@@ -1,24 +1,27 @@
-package repository
+package auth.repository
 
-import com.mohiva.play.silhouette.core.LoginInfo
-import model.User
+import auth.User
+import com.mohiva.play.silhouette.api.LoginInfo
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
 import scala.concurrent.Future
 
 trait UserRepository {
 
   def find(loginInfo: LoginInfo): Future[Option[User]]
 
-  def save(user: User): Future[Boolean]
+  def save(user: User): Future[Any]
 
 }
 
 trait DefaultUserRepository extends UserRepository {
 
   def find(loginInfo: LoginInfo): Future[Option[User]] = Future {
-    Some(User("gvolpe@github.com", LoginInfo("some-id", "some-key")))
+    InMemoryRepository.users.get(loginInfo)
   }
 
-  def save(user: User): Future[Boolean] = Future(true)
+  def save(user: User): Future[Any] = Future {
+    InMemoryRepository.users.put(user.loginInfo, user)
+  }
 
 }
