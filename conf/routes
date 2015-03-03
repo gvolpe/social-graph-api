@@ -10,6 +10,12 @@ GET     /                                   controllers.AuthController.index
 POST    /auth/signin                        controllers.AuthController.signIn
 POST    /auth/signup                        controllers.AuthController.signUp
 
+# Users API
+
+GET     /api/v1/users                       controllers.UserController.findUsers
+GET     /api/v1/users/:id                   controllers.UserController.findUserById(id: Long)
+POST    /api/v1/users                       controllers.UserController.createUser
+
 # Social Graph API
 
 GET     /api/v1/followers                   controllers.RelationshipController.findFollowers

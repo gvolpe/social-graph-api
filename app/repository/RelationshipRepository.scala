@@ -17,17 +17,11 @@ trait RelationshipRepository {
 
 }
 
-class RelationshipRepositoryImpl {
-
-  self: RelationshipRepository =>
-
-}
-
 trait NeoRelationshipRepository extends RelationshipRepository {
 
   import org.anormcypher._
 
-  implicit val connection = Neo4JConnection()
+  implicit val connection = Neo4JConnection(default = true)
 
   val socialTag = "Social"
 
@@ -36,9 +30,9 @@ trait NeoRelationshipRepository extends RelationshipRepository {
     userListFromStream(req)
   }
 
+  // https://github.com/AnormCypher/AnormCypher/issues/34
   def find(relationshipType: RelationshipType, id: Long): Future[List[Option[Long]]] = Future {
     val relationship = relationshipType.toString.toUpperCase
-    //  https://github.com/AnormCypher/AnormCypher/issues/34
     val query = "MATCH (a:" + socialTag + ")-[:" + relationship + "]->(b) WHERE a.id={userId} RETURN b.id"
     val req: CypherStatement = Cypher(query).on("userId" -> id)
     userListFromStream(req)

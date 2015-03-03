@@ -1,6 +1,6 @@
 package service
 
-import auth.{SignUp, User}
+import auth.{SignUp, UserIdentity}
 import auth.repository.DefaultUserIdentityRepository
 import auth.service.{DefaultUserIdentityService, UserIdentityService}
 import com.mohiva.play.silhouette.api.LoginInfo
@@ -15,7 +15,7 @@ class UserIdentityServiceTest extends Specification with FutureMatchers {
 
     "Find some user" in {
       val service: UserIdentityService = new DefaultUserIdentityService with DefaultUserIdentityRepository
-      val user: Future[Option[User]] = service.retrieve(LoginInfo("id", "key"))
+      val user: Future[Option[UserIdentity]] = service.retrieve(LoginInfo("id", "key"))
       user must be_==(None).await
     }
 
@@ -23,12 +23,12 @@ class UserIdentityServiceTest extends Specification with FutureMatchers {
       val service: UserIdentityService = new DefaultUserIdentityService with DefaultUserIdentityRepository
       val loginInfo = LoginInfo("some-id", "some-key")
       val signUp = SignUp("gvolpe@github.com", "123456")
-      val user = User(signUp.identifier, signUp.password, loginInfo)
+      val user = UserIdentity(signUp.identifier, signUp.password, loginInfo)
 
-      val result: Future[User] = service.add(loginInfo, signUp)
+      val result: Future[UserIdentity] = service.add(loginInfo, signUp)
       result must be_==(user).await
 
-      val foundUser: Future[Option[User]] = service.retrieve(loginInfo)
+      val foundUser: Future[Option[UserIdentity]] = service.retrieve(loginInfo)
       foundUser must be_==(Some(user)).await
     }
 

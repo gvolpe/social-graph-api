@@ -2,7 +2,7 @@ package repository
 
 import auth.repository.{DefaultPasswordRepository, PasswordRepositoryImpl, PasswordRepository, DefaultUserIdentityRepository}
 import auth.service.{DefaultUserIdentityService, UserIdentityService}
-import auth.{SignUp, User}
+import auth.{SignUp, UserIdentity}
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import org.specs2.matcher.FutureMatchers

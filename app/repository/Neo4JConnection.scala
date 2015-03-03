@@ -21,6 +21,11 @@ object Neo4JConnection {
       Neo4jREST()
   }
 
+  def apply(default: Boolean): Neo4jREST = {
+    if (default) Neo4jREST()
+    else apply()
+  }
+
 }
 
 case class Neo4JConfig(val host: String,
