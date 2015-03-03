@@ -5,13 +5,13 @@ import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.mvc._
-import repository.NeoRelationshipRepository
+import repository.{RelationshipRepositoryImpl, NeoRelationshipRepository}
 
 object RelationshipController extends JWTAuthenticatorController {
 
   // TODO: Get user id from the session
   val defaultUserId: Long = 1
-  val repo = NeoRelationshipRepository
+  val repo = new RelationshipRepositoryImpl with NeoRelationshipRepository
 
   def findFollowers = SecuredAction.async { implicit request =>
     val followers = repo.find(Follower, defaultUserId)
