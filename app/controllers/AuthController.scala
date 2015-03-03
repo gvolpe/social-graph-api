@@ -23,7 +23,7 @@ object AuthController extends JWTAuthenticatorController {
   def signUp = Action.async(parse.json) { implicit request =>
     request.body.validate[SignUp].map { signUp =>
       val loginInfo = LoginInfo(CredentialsProvider.ID, signUp.identifier)
-      (identityService.retrieve(loginInfo).flatMap {
+      identityService.retrieve(loginInfo).flatMap {
         case None => /* user not already exists */
           val authInfo = passwordHasher.hash(signUp.password)
           for {
@@ -41,7 +41,7 @@ object AuthController extends JWTAuthenticatorController {
           }
         case Some(u) => /* user already exists! */
           Future.successful(Conflict(Json.toJson("user already exists")))
-      })
+      }
     }.recoverTotal {
       case error =>
         Future.successful(BadRequest(Json.toJson(JsError.toFlatJson(error))))

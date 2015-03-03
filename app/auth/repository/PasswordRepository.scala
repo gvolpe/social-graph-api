@@ -1,8 +1,11 @@
 package auth.repository
 
+import auth.repository.redis.{HashedReadKey, HashedWriteKey, PasswordRedisKey, RedisConnectionManager}
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Json
 
 import scala.concurrent.Future
 
@@ -39,8 +42,25 @@ trait DefaultPasswordRepository extends PasswordRepository {
 
 trait RedisPasswordRepository extends PasswordRepository {
 
-  def savePwd(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = ???
+  val redis = RedisConnectionManager.connection
 
-  def findPwd(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = ???
+  def savePwd(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
+    val redisInfo: HashedWriteKey[String] = PasswordRedisKey(loginInfo, authInfo)
+    redis.hSet(redisInfo.key, redisInfo.field, redisInfo.value) map (_ => authInfo)
+  }
+
+  def findPwd(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = {
+    val redisInfo: HashedReadKey = PasswordRedisKey(loginInfo)
+    redis.hGet[String](redisInfo.key, redisInfo.field) map {
+      case Some(json) => fromJson(json)
+      case None => None
+    }
+  }
+
+  private def fromJson(json: String): Option[PasswordInfo] = {
+    import auth.Implicits._
+    val value = Json.parse(json)
+    Json.fromJson[PasswordInfo](value).asOpt
+  }
 
 }
