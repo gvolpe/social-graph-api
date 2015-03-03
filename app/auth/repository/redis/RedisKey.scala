@@ -31,14 +31,17 @@ object PasswordRedisKey {
 
 object UserRedisKey {
 
+  private def createKey(loginInfo: LoginInfo): String = {
+    loginInfo.providerID + ":" + loginInfo.providerKey
+  }
+
   def apply(loginInfo: LoginInfo): ReadKey = {
-    val key = loginInfo.providerID + ":" + loginInfo.providerKey
-    ReadKey(key)
+    ReadKey(createKey(loginInfo))
   }
 
   def apply(user: User): WriteKey = {
     import auth.Implicits._
-    val key = user.loginInfo.providerID + ":" + user.loginInfo.providerKey
+    val key: String = createKey(user.loginInfo)
     val value = Json.toJson(user).toString()
     WriteKey(key, value)
   }
