@@ -11,9 +11,6 @@ import scala.concurrent.Future
 
 object UserController extends JWTAuthenticatorController with NeoUserRepository {
 
-  // TODO: Get user id from the session
-  val defaultUserId: Long = 1
-
   import User._
 
   def findUserById(id: Long) = SecuredAction.async { implicit request =>
