@@ -1,7 +1,7 @@
 package controllers
 
-import _root_.auth.module.AuthenticatorController
-import _root_.auth.{ModelImplicits, SignUp, Token}
+import _root_.auth.module.JWTAuthenticatorController
+import _root_.auth.{SignUp, Token}
 import com.mohiva.play.silhouette.api.exceptions.AuthenticationException
 import com.mohiva.play.silhouette.api.util.Credentials
 import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, SignUpEvent}
@@ -12,13 +12,13 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 
-object AuthController extends AuthenticatorController {
+object AuthController extends JWTAuthenticatorController {
 
   def index = Action {
     Ok(views.html.index("Social Graph API"))
   }
 
-  import auth.ModelImplicits._
+  import auth.Implicits._
 
   def signUp = Action.async(parse.json) { implicit request =>
     request.body.validate[SignUp].map { signUp =>

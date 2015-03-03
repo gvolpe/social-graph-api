@@ -1,13 +1,13 @@
 package controllers
 
-import _root_.auth.module.AuthenticatorController
+import _root_.auth.module.JWTAuthenticatorController
 import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.mvc._
 import repository.NeoRelationshipRepository
 
-object RelationshipController extends AuthenticatorController {
+object RelationshipController extends JWTAuthenticatorController {
 
   // TODO: Get user id from the session
   val defaultUserId: Long = 1

@@ -1,7 +1,8 @@
 package repository
 
-import model.{RelationshipTypeFinder, RelationshipType}
+import model.RelationshipType
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
 import scala.concurrent.Future
 
 trait RelationshipRepository {

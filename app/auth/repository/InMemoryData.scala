@@ -6,7 +6,7 @@ import com.mohiva.play.silhouette.api.util.PasswordInfo
 
 import scala.collection.mutable
 
-object InMemoryRepository {
+object InMemoryData {
 
   val users = mutable.HashMap[LoginInfo, User]()
   var pwd: mutable.HashMap[LoginInfo, PasswordInfo] = mutable.HashMap()

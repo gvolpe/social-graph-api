@@ -17,11 +17,19 @@ trait UserRepository {
 trait DefaultUserRepository extends UserRepository {
 
   def find(loginInfo: LoginInfo): Future[Option[User]] = Future {
-    InMemoryRepository.users.get(loginInfo)
+    InMemoryData.users.get(loginInfo)
   }
 
   def save(user: User): Future[Any] = Future {
-    InMemoryRepository.users.put(user.loginInfo, user)
+    InMemoryData.users.put(user.loginInfo, user)
   }
+
+}
+
+trait RedisUserRepository extends UserRepository {
+
+  def find(loginInfo: LoginInfo): Future[Option[User]] = ???
+
+  def save(user: User): Future[Any] = ???
 
 }

@@ -6,7 +6,7 @@ import auth.service.DefaultUserService
 import com.mohiva.play.silhouette.api.Environment
 import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
 
-trait AuthenticatorController extends BaseAuthenticatorController[User, JWTAuthenticator] {
+trait JWTAuthenticatorController extends BaseJWTAuthenticatorController[User, JWTAuthenticator] {
 
   lazy val identityService = new DefaultUserService with DefaultUserRepository
   lazy val passwordInfoDAO = new PasswordRepository

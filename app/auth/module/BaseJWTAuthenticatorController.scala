@@ -9,7 +9,7 @@ import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import com.mohiva.play.silhouette.impl.services.DelegableAuthInfoService
 import com.mohiva.play.silhouette.impl.util.{BCryptPasswordHasher, PlayCacheLayer, SecureRandomIDGenerator}
 
-trait BaseAuthenticatorController[I <: Identity, T <: Authenticator] extends Silhouette[I, JWTAuthenticator] with AuthenticatorServiceModule {
+trait BaseJWTAuthenticatorController[I <: Identity, T <: Authenticator] extends Silhouette[I, JWTAuthenticator] with JWTAuthenticatorServiceModule {
 
   lazy val eventBus = EventBus()
   lazy val cacheLayer: CacheLayer = new PlayCacheLayer

@@ -6,7 +6,7 @@ import com.mohiva.play.silhouette.impl.authenticators.{JWTAuthenticator, JWTAuth
 import play.api.Play
 import play.api.Play.current
 
-trait AuthenticatorServiceModule {
+trait JWTAuthenticatorServiceModule {
 
   lazy val authenticatorService: AuthenticatorService[JWTAuthenticator] = {
     val settings = JWTAuthenticatorSettings(
