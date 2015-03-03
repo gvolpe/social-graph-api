@@ -1,6 +1,6 @@
 package auth.service
 
-import auth.repository.UserRepository
+import auth.repository.UserIdentityRepository
 import auth.{SignUp, User}
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.services.IdentityService
@@ -8,7 +8,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
 
-trait UserService extends IdentityService[User] {
+trait UserIdentityService extends IdentityService[User] {
 
   def add(loginInfo: LoginInfo, signUp: SignUp): Future[User]
 
@@ -16,9 +16,9 @@ trait UserService extends IdentityService[User] {
 
 }
 
-class DefaultUserService extends UserService {
+class DefaultUserIdentityService extends UserIdentityService {
 
-  self: UserRepository =>
+  self: UserIdentityRepository =>
 
   def add(loginInfo: LoginInfo, signUp: SignUp): Future[User] = {
     val user = User(signUp.identifier, signUp.password, loginInfo)

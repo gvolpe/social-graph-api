@@ -8,7 +8,7 @@ import play.api.libs.json.Json
 
 import scala.concurrent.Future
 
-trait UserRepository {
+trait UserIdentityRepository {
 
   def find(loginInfo: LoginInfo): Future[Option[User]]
 
@@ -16,7 +16,7 @@ trait UserRepository {
 
 }
 
-trait DefaultUserRepository extends UserRepository {
+trait DefaultUserIdentityRepository extends UserIdentityRepository {
 
   def find(loginInfo: LoginInfo): Future[Option[User]] = Future {
     InMemoryData.users.get(loginInfo)
@@ -28,7 +28,7 @@ trait DefaultUserRepository extends UserRepository {
 
 }
 
-trait RedisUserRepository extends UserRepository {
+trait RedisUserIdentityRepository extends UserIdentityRepository {
 
   val redis = RedisConnectionManager.connection
 
