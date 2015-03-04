@@ -21,7 +21,7 @@ class DefaultUserIdentityService extends UserIdentityService {
   self: UserIdentityRepository =>
 
   def add(loginInfo: LoginInfo, signUp: SignUp): Future[UserIdentity] = {
-    val user = UserIdentity(signUp.identifier, signUp.password, loginInfo)
+    val user = UserIdentity(signUp.identifier, loginInfo)
     save(user).map(_ => user)
   }
 

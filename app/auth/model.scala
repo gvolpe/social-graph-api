@@ -5,7 +5,7 @@ import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
 import org.joda.time.DateTime
 import play.api.libs.json.{JsString, JsValue, Writes, Json}
 
-case class UserIdentity(email: String, password: String, loginInfo: LoginInfo) extends Identity
+case class UserIdentity(email: String, loginInfo: LoginInfo) extends Identity
 case class SignUp(password: String, identifier: String)
 case class Token(token: String, expiresAt: DateTime)
 
