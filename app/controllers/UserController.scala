@@ -21,11 +21,9 @@ object UserController extends JWTAuthenticatorController with NeoUserRepository 
     findAll map (user => Ok(Json.toJson(user)))
   }
 
-  def createUser = SecuredAction.async(parse.json) { implicit request =>
-    request.body.asOpt[UserCreation] match {
-      case Some(user) => create(user) map (_ => Created)
-      case None => Future (BadRequest("Invalid Json format"))
-    }
+  def createUser = SecuredAction.async(parse.json[UserCreation]) { implicit request =>
+    val user: UserCreation = request.body
+    create(user) map (_ => Created)
   }
 
   def deleteUser(userId: Long) = TODO

@@ -4,31 +4,34 @@ import _root_.auth.module.JWTAuthenticatorController
 import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
-import play.api.mvc._
 import repository.NeoRelationshipRepository
 
 object RelationshipController extends JWTAuthenticatorController with NeoRelationshipRepository {
 
-  // TODO: Get user id from the session
-  val defaultUserId: Long = 1
-
-  def findFollowers = SecuredAction.async { implicit request =>
-    val followers = find(Follower, defaultUserId)
+  def findFollowers(id: Long) = SecuredAction.async { implicit request =>
+    val followers = find(Follower, id)
     followers.map( ids => Ok(Json.toJson(ids)) )
   }
 
-  def findFriends = SecuredAction.async { implicit request =>
-    val friends = find(Friend, defaultUserId)
+  def findFriends(id: Long) = SecuredAction.async { implicit request =>
+    val friends = find(Friend, id)
     friends.map( ids => Ok(Json.toJson(ids)) )
   }
 
-  def createRelationship(userId: Long) = Action.async { implicit request =>
+  def createFriendship = SecuredAction.async(parse.json[Friendship]) { implicit request =>
+    val friendship: Friendship = request.body
     for {
-      friend <- create(Friend, defaultUserId, userId)
-      follower <- create(Follower, userId, defaultUserId)
+      friend <- create(Friend, friendship.me, friendship.friend)
+      follower <- create(Follower, friendship.friend, friendship.me)
     } yield (Ok)
   }
 
-  def deleteRelationship(userId: Long) = TODO
+  def deleteFriendship = SecuredAction.async(parse.json[Friendship]) { implicit request =>
+    val friendship: Friendship = request.body
+    for {
+      friend <- delete(Friend, friendship.me, friendship.friend)
+      follower <- delete(Follower, friendship.friend, friendship.me)
+    } yield (Ok)
+  }
 
 }

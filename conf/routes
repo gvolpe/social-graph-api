@@ -18,11 +18,11 @@ POST    /api/v1/users                       controllers.UserController.createUse
 
 # Social Graph API
 
-GET     /api/v1/followers                   controllers.RelationshipController.findFollowers
-GET     /api/v1/friends                     controllers.RelationshipController.findFriends
+GET     /api/v1/followers/:id               controllers.RelationshipController.findFollowers(id: Long)
+GET     /api/v1/friends/:id                 controllers.RelationshipController.findFriends(id: Long)
 
-POST    /api/v1/friends/:userId             controllers.RelationshipController.createRelationship(userId: Long)
-DELETE  /api/v1/friends/:userId             controllers.RelationshipController.deleteRelationship(userId: Long)
+POST    /api/v1/friendship                  controllers.RelationshipController.createFriendship
+DELETE  /api/v1/friendship                  controllers.RelationshipController.deleteFriendship
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                       controllers.Assets.at(path="/public", file)

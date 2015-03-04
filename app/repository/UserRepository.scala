@@ -17,13 +17,9 @@ trait UserRepository {
 
 }
 
-trait NeoUserRepository extends UserRepository {
+trait NeoUserRepository extends UserRepository with SocialBaseRepository {
 
   import org.anormcypher._
-
-  implicit val connection = Neo4JConnection(default = true)
-
-  val socialTag = "Social"
 
   def findAll: Future[List[Option[User]]] = Future {
     val query = "MATCH (s:" + socialTag + ") RETURN s.id, s.username, s.email"
@@ -36,17 +32,6 @@ trait NeoUserRepository extends UserRepository {
     val query = "MATCH (s:" + socialTag + ") WHERE s.id = {userId} RETURN s.id, s.username, s.email"
     val req: CypherStatement = Cypher(query).on("userId" -> id)
     userListFromStream(req)
-  }
-
-  private def userListFromStream(req: CypherStatement): List[Option[User]] = {
-    val stream: Stream[CypherResultRow] = req()
-    stream.map(row => {
-      val id = row[Option[Long]]("s.id")
-      val username = row[Option[String]]("s.username")
-      val email = row[Option[String]]("s.email")
-      if (id.isDefined) Some(User(id.get, username.get, email.get))
-      else None
-    }).toList
   }
 
   def create(user: UserCreation): Future[Boolean] = Future {
