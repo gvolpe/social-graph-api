@@ -2,7 +2,7 @@ social-graph-api
 ================
 
 [![Build Status](https://travis-ci.org/gvolpe/social-graph-api.svg)](http://travis-ci.org/gvolpe/social-graph-api)
-[![Coverage Status](https://coveralls.io/r/gvolpe/social-graph-api/badge.png?branch=master)](https://coveralls.io/r/gvolpe/social-graph-api?branch=master)
+[![Coverage Status](https://coveralls.io/repos/gvolpe/social-graph-api/badge.svg)](https://coveralls.io/r/gvolpe/social-graph-api)
 
 This is an open source Social Graph API licensed under the Apache 2 license, quoted below.
 
