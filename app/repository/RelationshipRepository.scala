@@ -13,18 +13,11 @@ trait RelationshipRepository {
 
   def find(relationshipType: RelationshipType, id: Long): Future[List[Option[User]]]
 
-  def findAll: Future[List[Option[User]]]
-
 }
 
 trait NeoRelationshipRepository extends RelationshipRepository with SocialBaseRepository {
 
   import org.anormcypher._
-
-  def findAll: Future[List[Option[User]]] = Future {
-    val req: CypherStatement = Cypher( """ MATCH (s:{tag}) RETURN RETURN s.id, s.username, s.email """).on("tag" -> socialTag)
-    userListFromStream(req)
-  }
 
   // https://github.com/AnormCypher/AnormCypher/issues/34
   def find(relationshipType: RelationshipType, id: Long): Future[List[Option[User]]] = Future {
@@ -38,7 +31,7 @@ trait NeoRelationshipRepository extends RelationshipRepository with SocialBaseRe
     val relationship = relationshipType.toString.toUpperCase
     val query = "MATCH (a:" + socialTag + "),(b:" + socialTag + ") " +
       "WHERE a.id={id1} AND b.id={id2} " +
-      "CREATE (a)-[r:" + relationship + "]->(b) " +
+      "CREATE UNIQUE (a)-[r:" + relationship + "]->(b) " +
       "RETURN b"
     val st: CypherStatement = Cypher(query)
       .on("id1" -> id1)

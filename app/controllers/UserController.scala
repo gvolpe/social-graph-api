@@ -26,6 +26,8 @@ object UserController extends JWTAuthenticatorController with NeoUserRepository 
     create(user) map (_ => Created)
   }
 
-  def deleteUser(userId: Long) = TODO
+  def deleteUser(id: Long) = SecuredAction.async { implicit request =>
+    delete(id) map (_ => Ok)
+  }
 
 }

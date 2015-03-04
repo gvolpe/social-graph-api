@@ -40,7 +40,7 @@ trait NeoUserRepository extends UserRepository with SocialBaseRepository {
       "ON CREATE SET id.count = 1 " +
       "ON MATCH SET id.count = id.count + 1 " +
       "WITH id.count AS uid " +
-      "CREATE (s:Social { id: uid, username: '" + user.username + "', email: '" + user.email + "' }) " +
+      "CREATE UNIQUE (s:Social { id: uid, username: '" + user.username + "', email: '" + user.email + "' }) " +
       "RETURN s AS social"
 
     val st: CypherStatement = Cypher(query)
@@ -48,7 +48,9 @@ trait NeoUserRepository extends UserRepository with SocialBaseRepository {
   }
 
   def delete(id: Long): Future[Boolean] = Future {
-    val query = "MATCH (s:" + socialTag + ") WHERE s.id = {userId} DELETE s"
+    // Delete user and his relationships
+    val query = "MATCH (a:" + socialTag + ")-[r]-(b:Social) " +
+      "WHERE a.id = {userId} DELETE a, r"
     val st: CypherStatement = Cypher(query).on("userId" -> id)
     st.execute()
   }
