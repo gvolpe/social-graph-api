@@ -1,7 +1,7 @@
 social-graph-api
 ================
 
-This is an open source Social Graph API.
+This is an open source Social Graph API licensed under the Apache 2 license, quoted below.
 
 ## About the project
 
@@ -11,13 +11,13 @@ You can see a [live demo](https://social-graph-api.herokuapp.com) deployed at He
 
 ## Authentication
 
-SGA uses [Silhouette](http://silhouette.mohiva.com/) with the JWTAuthenticator to give access.
-Also uses [Redis](http://redis.io) to save the data of the authentication layer.
+SGA uses [Silhouette](http://silhouette.mohiva.com/) with the JWTAuthenticator (Json Web Token) to secure the API.
+To save the data of the authentication layer uses [Redis](http://redis.io).
 
 ## Social Graph Store
 
 SGA uses [Neo4j](http://neo4j.com) as a graph store.
-Also uses [AnormCypher](http://anormcypher.org/) as a Scala client library.
+As a Scala client library uses [AnormCypher](http://anormcypher.org/).
 
 ## Authentication API usage
 
@@ -27,7 +27,7 @@ Request:
 curl -X POST -H "Content-Type: application/json" -d '{ "identifier": "gvolpe@github.com", "password":"123456" }' https://<HOST>/auth/signup
 ```
 
-Response:
+Responses:
 * 200: Ok       --> Sign up ok
 * 209: Conflict --> User already exists
 
@@ -105,9 +105,59 @@ curl -X DELETE -H 'X-Auth-Token:hash3d-t0k3n' https://<HOST>/api/v1/users/3
 
 ## Social Graph API usage
 
-## License
+### Retrieve followers by Id
 
-This software is licensed under the Apache 2 license, quoted below.
+#### GET /api/v1/followers/{id}
+Request:
+```
+curl -X GET -H 'X-Auth-Token:hash3d-t0k3n' https://<HOST>/api/v1/followers/4
+```
+Response:
+```json
+[
+  {
+    "id": 5,
+    "username": "foobar",
+    "email": "foobar@github.com"
+  }
+]
+```
+
+### Retrieve friends (AKA following) by Id
+
+#### GET /api/v1/friends/{id}
+Request:
+```
+curl -X GET -H 'X-Auth-Token:hash3d-t0k3n' https://<HOST>/api/v1/friends/2
+```
+Response:
+```json
+[
+  {
+    "id": 3,
+    "username": "gvolpe",
+    "email": "gvolpe@github.com"
+  }
+]
+```
+
+### Create a friendship
+
+It creates a FRIEND relationship from A to B and a FOLLOWER relationship from B to A.
+
+#### POST /api/v1/friendship
+```
+curl -X POST -H 'X-Auth-Token:hash3d-t0k3n' -H "Content-Type: application/json" -d '{ "me": 7, "friend": 3 }' https://<HOST>/api/v1/friendship
+```
+
+Delete FRIEND and FOLLOWER relationships between two users.
+
+#### DELETE /api/v1/friendship
+```
+curl -X DELETE -H 'X-Auth-Token:hash3d-t0k3n' -H "Content-Type: application/json" -d '{ "me": 7, "friend": 3 }' https://<HOST>/api/v1/friendship
+```
+
+## License
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this project except in compliance with
 the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
