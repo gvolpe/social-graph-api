@@ -9,7 +9,6 @@ scalaVersion := "2.11.5"
 resolvers ++= Seq(
   "Atlassian Releases" at "https://maven.atlassian.com/public/",
   "anormcypher" at "http://repo.anormcypher.org/",
-  "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/",
   "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
 
