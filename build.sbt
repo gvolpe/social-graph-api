@@ -13,5 +13,8 @@ resolvers := ("anormcypher" at "http://repo.anormcypher.org/") +: resolvers.valu
 libraryDependencies ++= Seq(
   "org.anormcypher" %% "anormcypher" % "0.6.0",
   "com.mohiva" %% "play-silhouette" % "2.0-RC1",
-  "com.livestream" %% "scredis" % "2.0.6"
+  "com.livestream" %% "scredis" % "2.0.6",
+  "org.scalatestplus" %% "play" % "1.2.0" % "test"
 )
+
+ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := ".*RedisConnectionManager.*;.*Neo4JConnection.*"

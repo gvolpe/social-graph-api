@@ -1,6 +1,6 @@
 package controllers
 
-import _root_.auth.module.JWTAuthenticatorController
+import auth.module.{AuthenticatorIdentityModule, DefaultAuthenticatorIdentityModule, JWTAuthenticatorController}
 import _root_.auth.{SignUp, Token}
 import com.mohiva.play.silhouette.api.exceptions.AuthenticationException
 import com.mohiva.play.silhouette.api.util.Credentials
@@ -12,7 +12,11 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 
-object AuthController extends JWTAuthenticatorController {
+object AuthController extends BaseAuthController with DefaultAuthenticatorIdentityModule
+
+trait BaseAuthController extends JWTAuthenticatorController {
+
+  self: AuthenticatorIdentityModule =>
 
   def index = Action {
     Ok(views.html.index("Social Graph API"))

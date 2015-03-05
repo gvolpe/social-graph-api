@@ -9,7 +9,7 @@ import org.specs2.mutable._
 
 import scala.concurrent.Future
 
-class UserIdentityServiceTest extends Specification with FutureMatchers {
+class UserIdentityServiceSpec extends Specification with FutureMatchers {
 
   "DefaultUserIdentityService" should {
 

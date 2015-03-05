@@ -2,7 +2,7 @@ package model
 
 import org.specs2.mutable._
 
-class ModelTest extends Specification {
+class ModelSpec extends Specification {
 
   "Relationship Type" should {
 

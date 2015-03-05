@@ -1,6 +1,6 @@
 package controllers
 
-import _root_.auth.module.JWTAuthenticatorController
+import auth.module.{DefaultAuthenticatorIdentityModule, JWTAuthenticatorController}
 import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
@@ -9,7 +9,7 @@ import repository.NeoUserRepository
 
 import scala.concurrent.Future
 
-object UserController extends JWTAuthenticatorController with NeoUserRepository {
+object UserController extends JWTAuthenticatorController with DefaultAuthenticatorIdentityModule with NeoUserRepository {
 
   import User._
 

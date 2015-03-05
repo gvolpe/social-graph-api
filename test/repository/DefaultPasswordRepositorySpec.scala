@@ -10,7 +10,7 @@ import org.specs2.mutable._
 
 import scala.concurrent.Future
 
-class DefaultPasswordRepositoryTest extends Specification with FutureMatchers {
+class DefaultPasswordRepositorySpec extends Specification with FutureMatchers {
 
   "DefaultPasswordRepository" should {
 
