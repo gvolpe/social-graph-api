@@ -17,4 +17,4 @@ libraryDependencies ++= Seq(
   "org.scalatestplus" %% "play" % "1.2.0" % "test"
 )
 
-ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := ".*RedisConnectionManager.*;.*Neo4JConnection.*"
+ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := ".*Neo4JConnection.*;.*RedisConnectionManager.*;.*Redis.*Repository.*;.*Redis.*Module.*;.*Neo.*Repository.*;.*index.*;.*main.*;.*ReversAssets.*"
