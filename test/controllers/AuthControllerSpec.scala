@@ -12,6 +12,14 @@ object AuthControllerSpec extends Specification {
 
   "AuthController" should {
 
+    "Show index page" in new WithApplication {
+      val controller = new DefaultAuthController
+      val fakeRequest = FakeRequest(Helpers.GET, controllers.routes.AuthController.index().url)
+      val result = controller.index(fakeRequest)
+
+      status(result) must be_==(OK)
+    }
+
     "SignUp an user" in new WithApplication {
       val controller = new DefaultAuthController
       val jsonBody = Json.obj("identifier" -> "gvolpe@github.com", "password" -> "123456")

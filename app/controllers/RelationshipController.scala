@@ -4,14 +4,9 @@ import auth.module.{AuthenticatorIdentityModule, DefaultAuthenticatorIdentityMod
 import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
-import repository.{NeoRelationshipRepository, RelationshipRepository}
+import repository.{NeoRelationshipRepositoryProvider, RelationshipRepository}
 
-object RelationshipController extends BaseRelationshipController with DefaultAuthenticatorIdentityModule {
-
-  class NeoRepoImpl extends NeoRelationshipRepository
-  val repo = new NeoRepoImpl
-
-}
+object RelationshipController extends BaseRelationshipController with DefaultAuthenticatorIdentityModule with NeoRelationshipRepositoryProvider
 
 trait BaseRelationshipController extends JWTAuthenticatorController {
 

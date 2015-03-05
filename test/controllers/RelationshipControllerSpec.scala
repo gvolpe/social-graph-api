@@ -8,12 +8,9 @@ import play.api.test.{FakeRequest, Helpers, WithApplication}
 
 object RelationshipControllerSpec extends Specification {
 
-  class DefaultRelationshipController extends BaseRelationshipController with DefaultAuthenticatorIdentityModule {
-
-    class DefaultRepoImpl extends DefaultRelationshipRepository
-
-    val repo = new DefaultRepoImpl
-  }
+  class DefaultRelationshipController extends BaseRelationshipController
+    with DefaultAuthenticatorIdentityModule
+    with DefaultRelationshipRepositoryProvider
 
   "RelationshipController" should {
 

@@ -1,10 +1,17 @@
 package controllers
 
-import model.{User, RelationshipType}
+import model.{RelationshipType, User}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import repository.RelationshipRepository
 
 import scala.concurrent.Future
+
+trait DefaultRelationshipRepositoryProvider {
+
+  class RepoImpl extends DefaultRelationshipRepository
+  val repo = new RepoImpl
+
+}
 
 trait DefaultRelationshipRepository extends RelationshipRepository {
 

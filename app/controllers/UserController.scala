@@ -1,33 +1,36 @@
 package controllers
 
-import auth.module.{DefaultAuthenticatorIdentityModule, JWTAuthenticatorController}
+import auth.module.{AuthenticatorIdentityModule, DefaultAuthenticatorIdentityModule, JWTAuthenticatorController}
 import model._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
-import play.api.mvc._
-import repository.NeoUserRepository
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import repository.{NeoUserRepositoryProvider, UserRepository}
 
-import scala.concurrent.Future
+object UserController extends BaseUserController with DefaultAuthenticatorIdentityModule with NeoUserRepositoryProvider
 
-object UserController extends JWTAuthenticatorController with DefaultAuthenticatorIdentityModule with NeoUserRepository {
+trait BaseUserController extends JWTAuthenticatorController {
 
-  import User._
+  self: AuthenticatorIdentityModule =>
+
+  import model.User._
+
+  def repo: UserRepository
 
   def findUserById(id: Long) = SecuredAction.async { implicit request =>
-    findById(id) map (user => Ok(Json.toJson(user)))
+    repo.findById(id) map (user => Ok(Json.toJson(user)))
   }
 
   def findUsers = SecuredAction.async { implicit request =>
-    findAll map (user => Ok(Json.toJson(user)))
+    repo.findAll map (user => Ok(Json.toJson(user)))
   }
 
   def createUser = SecuredAction.async(parse.json[UserCreation]) { implicit request =>
     val user: UserCreation = request.body
-    create(user) map (_ => Created)
+    repo.create(user) map (_ => Created)
   }
 
   def deleteUser(id: Long) = SecuredAction.async { implicit request =>
-    delete(id) map (_ => Ok)
+    repo.delete(id) map (_ => Ok)
   }
 
 }
