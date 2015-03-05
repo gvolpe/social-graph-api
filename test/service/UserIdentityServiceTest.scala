@@ -23,7 +23,7 @@ class UserIdentityServiceTest extends Specification with FutureMatchers {
       val service: UserIdentityService = new DefaultUserIdentityService with DefaultUserIdentityRepository
       val loginInfo = LoginInfo("some-id", "some-key")
       val signUp = SignUp("gvolpe@github.com", "123456")
-      val user = UserIdentity(signUp.identifier, signUp.password, loginInfo)
+      val user = UserIdentity(signUp.identifier, loginInfo)
 
       val result: Future[UserIdentity] = service.add(loginInfo, signUp)
       result must be_==(user).await
