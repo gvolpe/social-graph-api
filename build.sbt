@@ -8,6 +8,8 @@ scalaVersion := "2.11.5"
 
 resolvers := ("Atlassian Releases" at "https://maven.atlassian.com/public/") +: resolvers.value
 
+resolvers := ("anormcypher" at "http://repo.anormcypher.org/") +: resolvers.value
+
 libraryDependencies ++= Seq(
   "org.anormcypher" %% "anormcypher" % "0.6.0",
   "com.mohiva" %% "play-silhouette" % "2.0-RC1",
