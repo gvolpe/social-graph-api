@@ -1,9 +1,6 @@
 package controllers
 
-import auth.UserIdentity
 import auth.module.DefaultAuthenticatorIdentityModule
-import com.mohiva.play.silhouette.api.Environment
-import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
 import org.specs2.mutable._
 import play.api.libs.json.Json
 import play.api.test.Helpers._
@@ -11,12 +8,7 @@ import play.api.test.{FakeRequest, Helpers, WithApplication}
 
 class AuthControllerSpec extends Specification {
 
-  class DefaultAuthController extends BaseAuthController with DefaultAuthenticatorIdentityModule {
-
-    override implicit lazy val env: Environment[UserIdentity, JWTAuthenticator] =
-      Environment[UserIdentity, JWTAuthenticator](identityService, authenticatorService, providers, eventBus)
-
-  }
+  class DefaultAuthController extends BaseAuthController with DefaultAuthenticatorIdentityModule
 
   "AuthController" should {
 
