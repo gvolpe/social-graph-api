@@ -1,6 +1,7 @@
 social-graph-api
 ================
 
+[![Codeship Status for gvolpe/social-graph-api](https://codeship.com/projects/0e48e1b0-a659-0132-6336-6e28cb00536c/status?branch=deploy)](https://codeship.com/projects/67002)
 [![Build Status](https://travis-ci.org/gvolpe/social-graph-api.svg)](http://travis-ci.org/gvolpe/social-graph-api)
 [![Coverage Status](https://coveralls.io/repos/gvolpe/social-graph-api/badge.svg)](https://coveralls.io/r/gvolpe/social-graph-api)
 
