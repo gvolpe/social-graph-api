@@ -66,6 +66,40 @@ class AuthControllerSpec extends Specification {
       contentAsString(result2) must contain("expiresAt")
     }
 
+    "SignUp the same user twice" in new WithApplication {
+      val controller = new DefaultAuthController
+      val jsonBody = Json.obj("identifier" -> "modersky@github.com", "password" -> "123456")
+      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.AuthController.signUp().url).withBody(jsonBody)
+      val result = controller.signUp(fakeRequest)
+
+      status(result) must be_==(OK)
+      contentAsString(result) must contain("token")
+      contentAsString(result) must contain("expiresAt")
+
+      val fakeRequest2 = FakeRequest(Helpers.POST, controllers.routes.AuthController.signUp().url).withBody(jsonBody)
+      val result2 = controller.signUp(fakeRequest2)
+
+      status(result2) must be_==(CONFLICT)
+    }
+
+    "SignUp with an invalid json body" in new WithApplication {
+      val controller = new DefaultAuthController
+      val jsonBody = Json.obj("wrongkey" -> "lalalala")
+      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.AuthController.signUp().url).withBody(jsonBody)
+      val result = controller.signUp(fakeRequest)
+
+      status(result) must be_==(BAD_REQUEST)
+    }
+
+    "SignIn with an invalid json body" in new WithApplication {
+      val controller = new DefaultAuthController
+      val jsonBody = Json.obj("wrongkey" -> "lalalala")
+      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.AuthController.signIn().url).withBody(jsonBody)
+      val result = controller.signIn(fakeRequest)
+
+      status(result) must be_==(BAD_REQUEST)
+    }
+
   }
 
 }
