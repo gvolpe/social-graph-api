@@ -13,7 +13,7 @@ class AuthControllerSpec extends Specification {
 
   class DefaultAuthController extends BaseAuthController with DefaultAuthenticatorIdentityModule {
 
-    implicit lazy val env: Environment[UserIdentity, JWTAuthenticator] =
+    override implicit lazy val env: Environment[UserIdentity, JWTAuthenticator] =
       Environment[UserIdentity, JWTAuthenticator](identityService, authenticatorService, providers, eventBus)
 
   }

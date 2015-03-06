@@ -12,12 +12,12 @@ import play.api.test.{FakeRequest, Helpers, WithApplication}
 
 class RelationshipControllerSpec extends Specification {
 
+  val identity = UserIdentity("gvolpe@github.com", LoginInfo("gvolpe", "gvolpe@github.com"))
+  implicit val fakeEnv = FakeEnvironment[UserIdentity, JWTAuthenticator](Seq(identity.loginInfo -> identity))
+
   class DefaultRelationshipController extends BaseRelationshipController
   with DefaultAuthenticatorIdentityModule with DefaultRelationshipRepositoryProvider {
-
-    val identity = UserIdentity("gvolpe@github.com", LoginInfo("gvolpe", "gvolpe@github.com"))
-    implicit val env = FakeEnvironment[UserIdentity, JWTAuthenticator](Seq(identity.loginInfo -> identity))
-
+    override implicit lazy val env = fakeEnv
   }
 
   "RelationshipController" should {
@@ -27,6 +27,7 @@ class RelationshipControllerSpec extends Specification {
       val body = Friendship(me = 1, friend = 2)
       val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.RelationshipController.createFriendship().url)
         .withBody(body)
+        .withAuthenticator(identity.loginInfo)
       val result = controller.createFriendship(fakeRequest)
 
       status(result) must be_==(OK)
@@ -37,6 +38,7 @@ class RelationshipControllerSpec extends Specification {
       val body = Friendship(me = 1, friend = 2)
       val fakeRequest = FakeRequest(Helpers.DELETE, controllers.routes.RelationshipController.deleteFriendship().url)
         .withBody(body)
+        .withAuthenticator(identity.loginInfo)
       val result = controller.deleteFriendship(fakeRequest)
 
       status(result) must be_==(OK)
@@ -45,6 +47,7 @@ class RelationshipControllerSpec extends Specification {
     "Find friends" in new WithApplication {
       val controller = new DefaultRelationshipController
       val fakeRequest = FakeRequest(Helpers.GET, controllers.routes.RelationshipController.findFriends(3).url)
+        .withAuthenticator(identity.loginInfo)
       val result = controller.findFriends(3)(fakeRequest)
 
       status(result) must be_==(OK)
@@ -53,9 +56,18 @@ class RelationshipControllerSpec extends Specification {
     "Find followers" in new WithApplication {
       val controller = new DefaultRelationshipController
       val fakeRequest = FakeRequest(Helpers.GET, controllers.routes.RelationshipController.findFollowers(3).url)
+        .withAuthenticator(identity.loginInfo)
       val result = controller.findFollowers(3)(fakeRequest)
 
       status(result) must be_==(OK)
+    }
+
+    "Find followers without authentication" in new WithApplication {
+      val controller = new DefaultRelationshipController
+      val fakeRequest = FakeRequest(Helpers.GET, controllers.routes.RelationshipController.findFollowers(3).url)
+      val result = controller.findFollowers(3)(fakeRequest)
+
+      status(result) must be_==(UNAUTHORIZED)
     }
 
   }
