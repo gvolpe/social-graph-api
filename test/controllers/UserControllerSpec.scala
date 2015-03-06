@@ -1,27 +1,29 @@
 package controllers
 
 import auth.module.DefaultAuthenticatorIdentityModule
+import model.UserCreation
 import org.specs2.mutable._
-import play.api.libs.json.Json
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers, WithApplication}
 
-object UserControllerSpec extends Specification {
+class UserControllerSpec extends Specification {
 
-  class DefaultUserController extends BaseUserController with DefaultAuthenticatorIdentityModule with DefaultUserRepositoryProvider
+  class DefaultUserController extends BaseUserController
+  with DefaultAuthenticatorIdentityModule with DefaultUserRepositoryProvider
 
   "UserController" should {
 
     "Create an user" in new WithApplication {
       val controller = new DefaultUserController
-      val jsonBody = Json.obj("username" -> "gvolpe", "email" -> "gvolpe@github.com")
-      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.UserController.createUser().url).withBody(jsonBody)
-      // TODO: Bug with fake request on secured actions return an Iteratee[Array[Byte], Result] instead of Future[Result]
-      //val result = controller.createFriendship(fakeRequest)
-      val result = controller.createUser(fakeRequest).run
+      val body = UserCreation("gvolpe", "gvolpe@github.com")
+      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.UserController.createUser().url)
+        .withBody(body)
 
-      status(result) must be_==(BAD_REQUEST)
-      //status(result) must be_==(UNAUTHORIZED)
+        //.withHeaders("X-Auth-Token" -> token)
+
+      val result = controller.createUser(fakeRequest)
+
+      status(result) must be_==(UNAUTHORIZED)
     }
 
     "Delete an user" in new WithApplication {
