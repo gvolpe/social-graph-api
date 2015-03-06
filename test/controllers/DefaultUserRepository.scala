@@ -23,8 +23,8 @@ trait DefaultUserRepository extends UserRepository {
     true
   }
 
-  def findById(id: Long): Future[List[Option[User]]] = Future {
-    List()
+  def findById(id: Long): Future[Option[User]] = Future {
+    None
   }
 
   def findAll: Future[List[Option[User]]] = Future {

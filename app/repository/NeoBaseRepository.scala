@@ -3,7 +3,7 @@ package repository
 import model.User
 import org.anormcypher.{CypherResultRow, CypherStatement}
 
-trait SocialBaseRepository {
+trait NeoBaseRepository {
 
   implicit val connection = Neo4JConnection(default = true)
 

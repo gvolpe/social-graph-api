@@ -11,13 +11,13 @@ trait UserRepository {
 
   def delete(id: Long): Future[Boolean]
 
-  def findById(id: Long): Future[List[Option[User]]]
+  def findById(id: Long): Future[Option[User]]
 
   def findAll: Future[List[Option[User]]]
 
 }
 
-trait NeoUserRepository extends UserRepository with SocialBaseRepository {
+trait NeoUserRepository extends UserRepository with NeoBaseRepository {
 
   import org.anormcypher._
 
@@ -28,10 +28,10 @@ trait NeoUserRepository extends UserRepository with SocialBaseRepository {
   }
 
   // https://github.com/AnormCypher/AnormCypher/issues/34
-  def findById(id: Long): Future[List[Option[User]]] = Future {
+  def findById(id: Long): Future[Option[User]] = Future {
     val query = "MATCH (s:" + socialTag + ") WHERE s.id = {userId} RETURN s.id, s.username, s.email"
     val req: CypherStatement = Cypher(query).on("userId" -> id)
-    userListFromStream(req)
+    userListFromStream(req).head
   }
 
   def create(user: UserCreation): Future[Boolean] = Future {

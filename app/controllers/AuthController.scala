@@ -1,18 +1,25 @@
 package controllers
 
 import auth.module.{AuthenticatorIdentityModule, DefaultAuthenticatorIdentityModule, JWTAuthenticatorController}
-import _root_.auth.{SignUp, Token}
+import auth.{UserIdentity, SignUp, Token}
 import com.mohiva.play.silhouette.api.exceptions.AuthenticationException
 import com.mohiva.play.silhouette.api.util.Credentials
-import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, SignUpEvent}
+import com.mohiva.play.silhouette.api.{Environment, LoginEvent, LoginInfo, SignUpEvent}
+import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
+import controllers.UserController._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.{JsError, Json}
 import play.api.mvc._
 
 import scala.concurrent.Future
 
-object AuthController extends BaseAuthController with DefaultAuthenticatorIdentityModule
+object AuthController extends BaseAuthController with DefaultAuthenticatorIdentityModule {
+
+  implicit lazy val env: Environment[UserIdentity, JWTAuthenticator] =
+    Environment[UserIdentity, JWTAuthenticator](identityService, authenticatorService, providers, eventBus)
+
+}
 
 trait BaseAuthController extends JWTAuthenticatorController {
 

@@ -1,40 +1,45 @@
 package controllers
 
+import auth.UserIdentity
 import auth.module.DefaultAuthenticatorIdentityModule
+import com.mohiva.play.silhouette.api.LoginInfo
+import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
+import com.mohiva.play.silhouette.test._
+import model.Friendship
 import org.specs2.mutable._
-import play.api.libs.json.Json
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers, WithApplication}
 
-object RelationshipControllerSpec extends Specification {
+class RelationshipControllerSpec extends Specification {
 
   class DefaultRelationshipController extends BaseRelationshipController
-    with DefaultAuthenticatorIdentityModule
-    with DefaultRelationshipRepositoryProvider
+  with DefaultAuthenticatorIdentityModule with DefaultRelationshipRepositoryProvider {
+
+    val identity = UserIdentity("gvolpe@github.com", LoginInfo("gvolpe", "gvolpe@github.com"))
+    implicit val env = FakeEnvironment[UserIdentity, JWTAuthenticator](Seq(identity.loginInfo -> identity))
+
+  }
 
   "RelationshipController" should {
 
     "Create a relationship" in new WithApplication {
       val controller = new DefaultRelationshipController
-      val jsonBody = Json.obj("me" -> 1, "friend" -> 2)
-      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.RelationshipController.createFriendship().url).withBody(jsonBody)
-      // TODO: Bug with fake request on secured actions return an Iteratee[Array[Byte], Result] instead of Future[Result]
-      //val result = controller.createFriendship(fakeRequest)
-      val result = controller.createFriendship(fakeRequest).run
+      val body = Friendship(me = 1, friend = 2)
+      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.RelationshipController.createFriendship().url)
+        .withBody(body)
+      val result = controller.createFriendship(fakeRequest)
 
-      status(result) must be_==(BAD_REQUEST)
-      //status(result) must be_==(UNAUTHORIZED)
+      status(result) must be_==(OK)
     }
 
     "Delete a relationship" in new WithApplication {
       val controller = new DefaultRelationshipController
-      val jsonBody = Json.obj("identifier" -> "foobar@github.com", "password" -> "123456")
-      // TODO: Bug with fake request on secured actions return an Iteratee[Array[Byte], Result] instead of Future[Result]
-      val fakeRequest = FakeRequest(Helpers.DELETE, controllers.routes.RelationshipController.deleteFriendship().url).withBody(jsonBody)
-      val result = controller.deleteFriendship(fakeRequest).run
+      val body = Friendship(me = 1, friend = 2)
+      val fakeRequest = FakeRequest(Helpers.DELETE, controllers.routes.RelationshipController.deleteFriendship().url)
+        .withBody(body)
+      val result = controller.deleteFriendship(fakeRequest)
 
-      status(result) must be_==(BAD_REQUEST)
-      //status(result) must be_==(UNAUTHORIZED)
+      status(result) must be_==(OK)
     }
 
     "Find friends" in new WithApplication {
@@ -42,7 +47,7 @@ object RelationshipControllerSpec extends Specification {
       val fakeRequest = FakeRequest(Helpers.GET, controllers.routes.RelationshipController.findFriends(3).url)
       val result = controller.findFriends(3)(fakeRequest)
 
-      status(result) must be_==(UNAUTHORIZED)
+      status(result) must be_==(OK)
     }
 
     "Find followers" in new WithApplication {
@@ -50,7 +55,7 @@ object RelationshipControllerSpec extends Specification {
       val fakeRequest = FakeRequest(Helpers.GET, controllers.routes.RelationshipController.findFollowers(3).url)
       val result = controller.findFollowers(3)(fakeRequest)
 
-      status(result) must be_==(UNAUTHORIZED)
+      status(result) must be_==(OK)
     }
 
   }

@@ -15,7 +15,7 @@ trait RelationshipRepository {
 
 }
 
-trait NeoRelationshipRepository extends RelationshipRepository with SocialBaseRepository {
+trait NeoRelationshipRepository extends RelationshipRepository with NeoBaseRepository {
 
   import org.anormcypher._
 

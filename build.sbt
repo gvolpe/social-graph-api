@@ -10,11 +10,13 @@ resolvers := ("Atlassian Releases" at "https://maven.atlassian.com/public/") +: 
 
 resolvers := ("anormcypher" at "http://repo.anormcypher.org/") +: resolvers.value
 
+val silhouetteVersion = "2.0-RC1"
+
 libraryDependencies ++= Seq(
   "org.anormcypher" %% "anormcypher" % "0.6.0",
-  "com.mohiva" %% "play-silhouette" % "2.0-RC1",
+  "com.mohiva" %% "play-silhouette" % silhouetteVersion,
   "com.livestream" %% "scredis" % "2.0.6",
-  "org.scalatestplus" %% "play" % "1.2.0" % "test"
+  "com.mohiva" %% "play-silhouette-testkit" % silhouetteVersion % "test"
 )
 
-ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := ".*Neo4JConnection.*;.*RedisConnectionManager.*;.*Redis.*Repository.*;.*Redis.*Module.*;.*Neo.*Repository.*;.*index.*;.*main.*;.*ReversAssets.*"
+ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := ".*Neo4JConnection.*;.*RedisConnectionManager.*;.*Redis.*Repository.*;.*Redis.*Module.*;.*Neo.*Repository.*;.*index.*;.*main.*;.*Reverse.*;.*Routes.*"
