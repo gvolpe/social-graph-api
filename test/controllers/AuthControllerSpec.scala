@@ -2,6 +2,7 @@ package controllers
 
 import auth.UserIdentity
 import auth.module.DefaultAuthenticatorIdentityModule
+import auth.repository.InMemoryData
 import auth.role.{Admin, SimpleUser}
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
@@ -13,7 +14,7 @@ import play.api.test.{FakeRequest, Helpers, WithApplication}
 
 class AuthControllerSpec extends Specification {
 
-  val baseUser = UserIdentity(Set(), LoginInfo("noadmin", "noadmin@github.com"))
+  val baseUser = UserIdentity(Set(), LoginInfo("baseuser", "baseuser@github.com"))
   val simpleUser = UserIdentity(Set(SimpleUser), LoginInfo("noadmin", "noadmin@github.com"))
   val admin = UserIdentity(Set(Admin), LoginInfo("admin", "admin@github.com"))
   implicit val fakeEnv = FakeEnvironment[UserIdentity, JWTAuthenticator](Seq(admin.loginInfo -> admin))
@@ -152,6 +153,37 @@ class AuthControllerSpec extends Specification {
       val fakeRequest2 = FakeRequest(Helpers.GET, controllers.routes.AuthController.adminAction().url)
         .withAuthenticator(baseUser.loginInfo)
       val result2 = controller.adminAction(fakeRequest2)
+
+      status(result2) must be_==(UNAUTHORIZED)
+    }
+
+    "SignIn an user within an environment without credentials" in new WithApplication {
+      implicit val fakeEnvWithoutCredentials = FakeEnvironment[UserIdentity, JWTAuthenticator](Seq())
+      class FakeAuthWithoutCredentialsController extends BaseAuthController with DefaultAuthenticatorIdentityModule {
+        override implicit lazy val env = fakeEnvWithoutCredentials
+      }
+
+      val controller = new FakeAuthWithoutCredentialsController
+      val jsonBody = Json.obj("identifier" -> "foobar@github.com", "password" -> "123456")
+      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.AuthController.signIn().url).withBody(jsonBody)
+      val result = controller.signIn(fakeRequest)
+
+      status(result) must be_==(UNAUTHORIZED)
+    }
+
+    "SignIn an user within an environment with wrong credentials" in new WithApplication {
+      val controller = new DefaultAuthController
+      val jsonBody = Json.obj("identifier" -> "wronguser@github.com", "password" -> "123456")
+      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.AuthController.signUp().url).withBody(jsonBody)
+      val result = controller.signUp(fakeRequest)
+
+      status(result) must be_==(OK)
+      contentAsString(result) must contain("token")
+      contentAsString(result) must contain("expiresAt")
+
+      InMemoryData.usersIdentity.clear()
+      val fakeRequest2 = FakeRequest(Helpers.POST, controllers.routes.AuthController.signIn().url).withBody(jsonBody)
+      val result2 = controller.signIn(fakeRequest)
 
       status(result2) must be_==(UNAUTHORIZED)
     }
