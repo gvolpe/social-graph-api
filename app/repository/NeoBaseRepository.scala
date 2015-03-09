@@ -20,4 +20,9 @@ trait NeoBaseRepository {
     }).toList
   }
 
+  def userIdFromStream(req: CypherStatement): Option[Long] = {
+    val stream: Stream[CypherResultRow] = req()
+    stream.map(row => { row[Option[Long]]("s.id") }).head
+  }
+
 }

@@ -68,6 +68,24 @@ class UserControllerSpec extends Specification {
       status(result) must be_==(UNAUTHORIZED)
     }
 
+    "Create an user and find by Id" in new WithApplication {
+      val controller = new DefaultUserController
+      val body = UserCreation("jpetrucci", "jpetrucci@github.com")
+      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.UserController.createUser().url)
+        .withBody(body)
+        .withAuthenticator(identity.loginInfo)
+      val result = controller.createUser(fakeRequest)
+
+      val userId: Option[Long] = contentAsJson(result).asOpt[Long]
+      userId.isDefined must be_==(true)
+
+      val fakeRequest2 = FakeRequest(Helpers.GET, controllers.routes.UserController.findUserById(userId.get).url)
+        .withAuthenticator(identity.loginInfo)
+      val result2 = controller.findUserById(userId.get)(fakeRequest2)
+
+      status(result2) must be_==(OK)
+    }
+
   }
 
 }

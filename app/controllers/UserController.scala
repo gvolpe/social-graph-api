@@ -29,7 +29,7 @@ trait BaseUserController extends JWTAuthenticatorController {
 
   def createUser = SecuredAction.async(parse.json[UserCreation]) { implicit request =>
     val user: UserCreation = request.body
-    repo.create(user) map (_ => Created)
+    repo.create(user) map (id => Created(Json.toJson(id)))
   }
 
   def deleteUser(id: Long) = SecuredAction.async { implicit request =>

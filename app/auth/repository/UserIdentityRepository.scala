@@ -19,11 +19,11 @@ trait UserIdentityRepository {
 trait DefaultUserIdentityRepository extends UserIdentityRepository {
 
   def find(loginInfo: LoginInfo): Future[Option[UserIdentity]] = Future {
-    InMemoryData.users.get(loginInfo)
+    InMemoryData.usersIdentity.get(loginInfo)
   }
 
   def save(user: UserIdentity): Future[Any] = Future {
-    InMemoryData.users.put(user.loginInfo, user)
+    InMemoryData.usersIdentity.put(user.loginInfo, user)
   }
 
 }

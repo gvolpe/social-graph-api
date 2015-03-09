@@ -157,6 +157,8 @@ It creates a FRIEND relationship from A to B and a FOLLOWER relationship from B 
 curl -X POST -H 'X-Auth-Token:hash3d-t0k3n' -H "Content-Type: application/json" -d '{ "me": 7, "friend": 3 }' https://<HOST>/api/v1/friendship
 ```
 
+### Delete a friendship
+
 Delete FRIEND and FOLLOWER relationships between two users.
 
 #### DELETE /api/v1/friendship
