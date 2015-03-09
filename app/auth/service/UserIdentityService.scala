@@ -1,6 +1,7 @@
 package auth.service
 
 import auth.repository.UserIdentityRepository
+import auth.role.SimpleUser
 import auth.{SignUp, UserIdentity}
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.services.IdentityService
@@ -21,7 +22,7 @@ class DefaultUserIdentityService extends UserIdentityService {
   self: UserIdentityRepository =>
 
   def add(loginInfo: LoginInfo, signUp: SignUp): Future[UserIdentity] = {
-    val user = UserIdentity(signUp.identifier, loginInfo)
+    val user = UserIdentity(Set(SimpleUser), loginInfo)
     save(user).map(_ => user)
   }
 

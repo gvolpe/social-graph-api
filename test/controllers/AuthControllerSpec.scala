@@ -1,6 +1,11 @@
 package controllers
 
+import auth.UserIdentity
 import auth.module.DefaultAuthenticatorIdentityModule
+import auth.role.{Admin, SimpleUser}
+import com.mohiva.play.silhouette.api.LoginInfo
+import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
+import com.mohiva.play.silhouette.test._
 import org.specs2.mutable._
 import play.api.libs.json.Json
 import play.api.test.Helpers._
@@ -8,7 +13,15 @@ import play.api.test.{FakeRequest, Helpers, WithApplication}
 
 class AuthControllerSpec extends Specification {
 
+  val baseUser = UserIdentity(Set(), LoginInfo("noadmin", "noadmin@github.com"))
+  val simpleUser = UserIdentity(Set(SimpleUser), LoginInfo("noadmin", "noadmin@github.com"))
+  val admin = UserIdentity(Set(Admin), LoginInfo("admin", "admin@github.com"))
+  implicit val fakeEnv = FakeEnvironment[UserIdentity, JWTAuthenticator](Seq(admin.loginInfo -> admin))
+
   class DefaultAuthController extends BaseAuthController with DefaultAuthenticatorIdentityModule
+  class FakeAuthController extends BaseAuthController with DefaultAuthenticatorIdentityModule {
+    override implicit lazy val env = fakeEnv
+  }
 
   "AuthController" should {
 
@@ -90,6 +103,57 @@ class AuthControllerSpec extends Specification {
       val result = controller.signIn(fakeRequest)
 
       status(result) must be_==(BAD_REQUEST)
+    }
+
+    "SignUp an user with SimpleUser role and access an admin resource" in new WithApplication {
+      val controller = new FakeAuthController
+      val jsonBody = Json.obj("identifier" -> "noadmin@github.com", "password" -> "123456")
+      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.AuthController.signUp().url).withBody(jsonBody)
+      val result = controller.signUp(fakeRequest)
+
+      status(result) must be_==(OK)
+      contentAsString(result) must contain("token")
+      contentAsString(result) must contain("expiresAt")
+
+      val fakeRequest2 = FakeRequest(Helpers.GET, controllers.routes.AuthController.adminAction().url)
+        .withAuthenticator(simpleUser.loginInfo)
+      val result2 = controller.adminAction(fakeRequest2)
+
+      status(result2) must be_==(UNAUTHORIZED)
+    }
+
+    "SignUp an user with Admin role and access an admin resource" in new WithApplication {
+      val controller = new FakeAuthController
+      val jsonBody = Json.obj("identifier" -> "admin@github.com", "password" -> "123456")
+      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.AuthController.signUp().url).withBody(jsonBody)
+      val result = controller.signUp(fakeRequest)
+
+      status(result) must be_==(OK)
+      contentAsString(result) must contain("token")
+      contentAsString(result) must contain("expiresAt")
+
+      val fakeRequest2 = FakeRequest(Helpers.GET, controllers.routes.AuthController.adminAction().url)
+        .withAuthenticator(admin.loginInfo)
+      val result2 = controller.adminAction(fakeRequest2)
+
+      status(result2) must be_==(OK)
+    }
+
+    "SignUp an user without roles and access an admin resource" in new WithApplication {
+      val controller = new FakeAuthController
+      val jsonBody = Json.obj("identifier" -> "baseuser@github.com", "password" -> "123456")
+      val fakeRequest = FakeRequest(Helpers.POST, controllers.routes.AuthController.signUp().url).withBody(jsonBody)
+      val result = controller.signUp(fakeRequest)
+
+      status(result) must be_==(OK)
+      contentAsString(result) must contain("token")
+      contentAsString(result) must contain("expiresAt")
+
+      val fakeRequest2 = FakeRequest(Helpers.GET, controllers.routes.AuthController.adminAction().url)
+        .withAuthenticator(baseUser.loginInfo)
+      val result2 = controller.adminAction(fakeRequest2)
+
+      status(result2) must be_==(UNAUTHORIZED)
     }
 
   }

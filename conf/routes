@@ -9,6 +9,7 @@ GET     /                                   controllers.AuthController.index
 
 POST    /auth/signin                        controllers.AuthController.signIn
 POST    /auth/signup                        controllers.AuthController.signUp
+GET     /auth/admin                         controllers.AuthController.adminAction
 
 # Users API
 

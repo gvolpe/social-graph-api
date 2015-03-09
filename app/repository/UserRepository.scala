@@ -31,7 +31,9 @@ trait NeoUserRepository extends UserRepository with NeoBaseRepository {
   def findById(id: Long): Future[Option[User]] = Future {
     val query = "MATCH (s:" + socialTag + ") WHERE s.id = {userId} RETURN s.id, s.username, s.email"
     val req: CypherStatement = Cypher(query).on("userId" -> id)
-    userListFromStream(req).head
+    val list: List[Option[User]] = userListFromStream(req)
+    if (list.isEmpty) None
+    else list.head
   }
 
   def create(user: UserCreation): Future[Option[Long]] = Future {

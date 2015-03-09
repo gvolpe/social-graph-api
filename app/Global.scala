@@ -20,7 +20,7 @@ object Global extends GlobalSettings with SecuredSettings {
    * @return The result to send to the client.
    */
   override def onNotAuthenticated(request: RequestHeader, lang: Lang): Option[Future[Result]] = {
-    Some(Future { Unauthorized(Json.toJson("credentials not correct")) })
+    Some(Future { Unauthorized(Json.toJson("Credentials are not correct.")) })
   }
 
   /**
@@ -33,7 +33,7 @@ object Global extends GlobalSettings with SecuredSettings {
    * @return The result to send to the client.
    */
   override def onNotAuthorized(request: RequestHeader, lang: Lang): Option[Future[Result]] = {
-    Some(Future { Unauthorized(Json.toJson("credentials not correct")) })
+    Some(Future { Unauthorized(Json.toJson("You don't have permission to access here.")) })
   }
 
   /**
@@ -41,11 +41,9 @@ object Global extends GlobalSettings with SecuredSettings {
    * will be called. The default is to use the internal framework error page:
    */
   override def onError(request: RequestHeader, ex: Throwable) = {
+    // TODO: Log exception (ex.getMessage)
     Future.successful {
-      if (play.api.Play.current.mode == Mode.Dev)
-        InternalServerError(Json.toJson("Internal server error " + ex.getMessage))
-      else
-        InternalServerError(Json.toJson("Oh oh o.O"))
+      InternalServerError(Json.toJson("Please, Contact Developers."))
     }
   }
 

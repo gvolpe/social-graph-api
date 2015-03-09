@@ -2,6 +2,7 @@ package controllers
 
 import auth.UserIdentity
 import auth.module.DefaultAuthenticatorIdentityModule
+import auth.role.SimpleUser
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
 import com.mohiva.play.silhouette.test._
@@ -12,7 +13,7 @@ import play.api.test.{FakeRequest, Helpers, WithApplication}
 
 class RelationshipControllerSpec extends Specification {
 
-  val identity = UserIdentity("gvolpe@github.com", LoginInfo("gvolpe", "gvolpe@github.com"))
+  val identity = UserIdentity(Set(SimpleUser), LoginInfo("gvolpe", "gvolpe@github.com"))
   implicit val fakeEnv = FakeEnvironment[UserIdentity, JWTAuthenticator](Seq(identity.loginInfo -> identity))
 
   class DefaultRelationshipController extends BaseRelationshipController

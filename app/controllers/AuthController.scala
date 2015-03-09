@@ -1,6 +1,7 @@
 package controllers
 
 import auth.module.{AuthenticatorIdentityModule, DefaultAuthenticatorIdentityModule, JWTAuthenticatorController}
+import auth.role.{Admin, WithRole}
 import auth.{SignUp, Token}
 import com.mohiva.play.silhouette.api.exceptions.AuthenticationException
 import com.mohiva.play.silhouette.api.util.Credentials
@@ -74,6 +75,10 @@ trait BaseAuthController extends JWTAuthenticatorController {
     }.recoverTotal {
       case error => Future.successful(BadRequest(Json.obj("message" -> JsError.toFlatJson(error))))
     }
+  }
+
+  def adminAction = SecuredAction(WithRole(Admin)).async { implicit request =>
+    Future(Ok("Nice, you have power here!"))
   }
 
 }

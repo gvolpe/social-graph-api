@@ -7,13 +7,11 @@ import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import com.mohiva.play.silhouette.impl.services.DelegableAuthInfoService
-import com.mohiva.play.silhouette.impl.util.{BCryptPasswordHasher, PlayCacheLayer, SecureRandomIDGenerator}
+import com.mohiva.play.silhouette.impl.util.{BCryptPasswordHasher, SecureRandomIDGenerator}
 
 trait BaseJWTAuthenticatorController[I <: Identity, T <: Authenticator] extends Silhouette[I, JWTAuthenticator] with JWTAuthenticatorServiceModule {
 
   lazy val eventBus = EventBus()
-  lazy val cacheLayer: CacheLayer = new PlayCacheLayer
-  lazy val httpLayer: HTTPLayer = new PlayHTTPLayer
   lazy val idGenerator: IDGenerator = new SecureRandomIDGenerator()
   lazy val passwordHasher: PasswordHasher = new BCryptPasswordHasher()
 

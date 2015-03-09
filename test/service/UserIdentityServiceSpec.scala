@@ -1,5 +1,6 @@
 package service
 
+import auth.role.SimpleUser
 import auth.{SignUp, UserIdentity}
 import auth.repository.DefaultUserIdentityRepository
 import auth.service.{DefaultUserIdentityService, UserIdentityService}
@@ -23,7 +24,7 @@ class UserIdentityServiceSpec extends Specification with FutureMatchers {
       val service: UserIdentityService = new DefaultUserIdentityService with DefaultUserIdentityRepository
       val loginInfo = LoginInfo("some-id", "some-key")
       val signUp = SignUp("gvolpe@github.com", "123456")
-      val user = UserIdentity(signUp.identifier, loginInfo)
+      val user = UserIdentity(Set(SimpleUser), loginInfo)
 
       val result: Future[UserIdentity] = service.add(loginInfo, signUp)
       result must be_==(user).await

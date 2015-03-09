@@ -1,6 +1,7 @@
 package auth.repository.redis
 
 import auth.UserIdentity
+import auth.role.{Admin, SimpleUser}
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import org.specs2.mutable._
@@ -38,9 +39,25 @@ class RedisKeySpec extends Specification {
       readKey.key must be_==(providerID + ":" + providerKey)
     }
 
-    "Generate a WriteKey" in {
-      val userIdentity = UserIdentity("gvolpe@github.com", loginInfo)
-      val userJson = """ {"email":"gvolpe@github.com","loginInfo":{"providerID":"credentials","providerKey":"gvolpe@github.com"}} """.trim
+    "Generate a WriteKey with SimpleUser role" in {
+      val userIdentity = UserIdentity(Set(SimpleUser), loginInfo)
+      val userJson = """ {"roles":[{"role":"user"}],"loginInfo":{"providerID":"credentials","providerKey":"gvolpe@github.com"}} """.trim
+      val writeKey: WriteKey = UserRedisKey(userIdentity)
+      writeKey.key must be_==(providerID + ":" + providerKey)
+      writeKey.value must be_==(userJson)
+    }
+
+    "Generate a WriteKey with Admin role" in {
+      val userIdentity = UserIdentity(Set(Admin), loginInfo)
+      val userJson = """ {"roles":[{"role":"admin"}],"loginInfo":{"providerID":"credentials","providerKey":"gvolpe@github.com"}} """.trim
+      val writeKey: WriteKey = UserRedisKey(userIdentity)
+      writeKey.key must be_==(providerID + ":" + providerKey)
+      writeKey.value must be_==(userJson)
+    }
+
+    "Generate a WriteKey with Admin and SimpleUser role" in {
+      val userIdentity = UserIdentity(Set(SimpleUser, Admin), loginInfo)
+      val userJson = """ {"roles":[{"role":"user"},{"role":"admin"}],"loginInfo":{"providerID":"credentials","providerKey":"gvolpe@github.com"}} """.trim
       val writeKey: WriteKey = UserRedisKey(userIdentity)
       writeKey.key must be_==(providerID + ":" + providerKey)
       writeKey.value must be_==(userJson)
