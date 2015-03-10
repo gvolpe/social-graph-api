@@ -10,7 +10,7 @@ import scala.collection.mutable
 object InMemoryData {
 
   val usersIdentity = mutable.HashMap[LoginInfo, UserIdentity]()
-  var pwd = mutable.HashMap[LoginInfo, PasswordInfo]()
+  val pwd = mutable.HashMap[LoginInfo, PasswordInfo]()
   val users = mutable.HashMap[Long, User]()
 
 }
