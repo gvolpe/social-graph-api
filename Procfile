@@ -1,0 +1,1 @@
+web: target/universal/stage/bin/social-graph-api -Dhttp.port=${PORT} -J-javaagent:target/universal/stage/lib/com.newrelic.agent.java.newrelic-agent-3.14.0.jar -J-Dnewrelic.config.file=targe/classes/newrelic.yml
