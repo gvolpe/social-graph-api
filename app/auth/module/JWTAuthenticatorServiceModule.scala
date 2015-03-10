@@ -15,7 +15,7 @@ trait JWTAuthenticatorServiceModule {
       encryptSubject = Play.configuration.getBoolean("silhouette.authenticator.encryptSubject").getOrElse { true },
       authenticatorIdleTimeout = Play.configuration.getInt("silhouette.authenticator.authenticatorIdleTimeout"), // This feature is disabled by default to prevent the generation of a new JWT on every request
       authenticatorExpiry = Play.configuration.getInt("silhouette.authenticator.authenticatorExpiry").getOrElse { 12 * 60 * 60 },
-      sharedSecret = Play.configuration.getString("application.secret").get)
+      sharedSecret = Play.configuration.getString("application.secret").getOrElse("4pps3cr3t"))
     new JWTAuthenticatorService(
       settings = settings,
       dao = None,

@@ -22,7 +22,8 @@ trait NeoBaseRepository {
 
   def userIdFromStream(req: CypherStatement): Option[Long] = {
     val stream: Stream[CypherResultRow] = req()
-    stream.map(row => { row[Option[Long]]("s.id") }).head
+    val list = stream.map(row => { row[Option[Long]]("s.id") })
+    list.headOption.getOrElse(None)
   }
 
 }

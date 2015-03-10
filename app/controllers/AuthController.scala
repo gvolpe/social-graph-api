@@ -1,5 +1,6 @@
 package controllers
 
+import auth.Implicits._
 import auth.module.{AuthenticatorIdentityModule, DefaultAuthenticatorIdentityModule, JWTAuthenticatorController}
 import auth.role.{Admin, WithRole}
 import auth.{SignUp, Token}
@@ -22,8 +23,6 @@ trait BaseAuthController extends JWTAuthenticatorController {
   def index = Action {
     Ok(views.html.index("Social Graph API"))
   }
-
-  import auth.Implicits._
 
   def signUp = Action.async(parse.json) { implicit request =>
     request.body.validate[SignUp].map { signUp =>

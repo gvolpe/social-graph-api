@@ -2,6 +2,7 @@ package controllers
 
 import auth.module.{AuthenticatorIdentityModule, DefaultAuthenticatorIdentityModule, JWTAuthenticatorController}
 import model._
+import model.User._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import repository.{NeoUserRepositoryProvider, UserRepository}
@@ -11,8 +12,6 @@ object UserController extends BaseUserController with DefaultAuthenticatorIdenti
 trait BaseUserController extends JWTAuthenticatorController {
 
   self: AuthenticatorIdentityModule =>
-
-  import model.User._
 
   def repo: UserRepository
 

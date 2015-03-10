@@ -1,5 +1,6 @@
 package auth.repository
 
+import auth.Implicits._
 import auth.UserIdentity
 import auth.repository.redis.{WriteKey, ReadKey, RedisConnectionManager, UserRedisKey}
 import com.mohiva.play.silhouette.api.LoginInfo
@@ -46,7 +47,6 @@ trait RedisUserIdentityRepository extends UserIdentityRepository {
   }
 
   private def fromJson(json: String): Option[UserIdentity] = {
-    import auth.Implicits._
     val value = Json.parse(json)
     Json.fromJson[UserIdentity](value).asOpt
   }

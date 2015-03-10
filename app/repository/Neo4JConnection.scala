@@ -12,11 +12,11 @@ object Neo4JConnection {
       Neo4jREST(
         host = config.host,
         port = config.port,
-        path = config.path.get,
-        username = config.username.get,
-        password = config.password.get,
-        cypherEndpoint = config.cypherEndpoint.get,
-        https = config.https.get)
+        path = config.path.getOrElse("/db/data/"),
+        username = config.username.getOrElse(""),
+        password = config.password.getOrElse(""),
+        cypherEndpoint = config.cypherEndpoint.getOrElse("cypher"),
+        https = config.https.getOrElse(false))
     else
       Neo4jREST()
   }

@@ -1,6 +1,7 @@
 package repository
 
 import model.{UserCreation, User}
+import org.anormcypher._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
@@ -19,8 +20,6 @@ trait UserRepository {
 
 trait NeoUserRepository extends UserRepository with NeoBaseRepository {
 
-  import org.anormcypher._
-
   def findAll: Future[List[Option[User]]] = Future {
     val query = "MATCH (s:" + socialTag + ") RETURN s.id, s.username, s.email"
     val req: CypherStatement = Cypher(query)
@@ -32,8 +31,7 @@ trait NeoUserRepository extends UserRepository with NeoBaseRepository {
     val query = "MATCH (s:" + socialTag + ") WHERE s.id = {userId} RETURN s.id, s.username, s.email"
     val req: CypherStatement = Cypher(query).on("userId" -> id)
     val list: List[Option[User]] = userListFromStream(req)
-    if (list.isEmpty) None
-    else list.head
+    list.headOption.getOrElse(None)
   }
 
   def create(user: UserCreation): Future[Option[Long]] = Future {

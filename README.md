@@ -4,6 +4,7 @@ social-graph-api
 [![Build Status](https://travis-ci.org/gvolpe/social-graph-api.svg)](http://travis-ci.org/gvolpe/social-graph-api)
 [![Coverage Status](https://coveralls.io/repos/gvolpe/social-graph-api/badge.svg)](https://coveralls.io/r/gvolpe/social-graph-api)
 [![Stories in Ready](https://badge.waffle.io/gvolpe/social-graph-api.svg?label=ready&title=Ready)](http://waffle.io/gvolpe/social-graph-api)
+[![Codacy Badge](https://www.codacy.com/project/badge/f451c26222064b579c38a946d7c120c4)](https://www.codacy.com/public/volpegabriel/social-graph-api)
 [![Try at Heroku](https://img.shields.io/badge/try-social--graph--api-red.svg)](https://social-graph-api.herokuapp.com)
 
 This is an open source Social Graph API licensed under the Apache 2 license, quoted below.

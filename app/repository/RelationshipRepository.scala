@@ -1,6 +1,7 @@
 package repository
 
 import model.{User, RelationshipType}
+import org.anormcypher._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
@@ -16,8 +17,6 @@ trait RelationshipRepository {
 }
 
 trait NeoRelationshipRepository extends RelationshipRepository with NeoBaseRepository {
-
-  import org.anormcypher._
 
   // https://github.com/AnormCypher/AnormCypher/issues/34
   def find(relationshipType: RelationshipType, id: Long): Future[List[Option[User]]] = Future {

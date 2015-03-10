@@ -1,5 +1,6 @@
 package auth.repository
 
+import auth.Implicits._
 import auth.repository.redis.{HashedReadKey, HashedWriteKey, PasswordRedisKey, RedisConnectionManager}
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
@@ -58,7 +59,6 @@ trait RedisPasswordRepository extends PasswordRepository {
   }
 
   private def fromJson(json: String): Option[PasswordInfo] = {
-    import auth.Implicits._
     val value = Json.parse(json)
     Json.fromJson[PasswordInfo](value).asOpt
   }

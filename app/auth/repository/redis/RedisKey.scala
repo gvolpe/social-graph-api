@@ -1,5 +1,6 @@
 package auth.repository.redis
 
+import auth.Implicits._
 import auth.UserIdentity
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
@@ -20,7 +21,6 @@ object PasswordRedisKey {
   }
 
   def apply(loginInfo: LoginInfo, authInfo: PasswordInfo): HashedWriteKey[String] = {
-    import auth.Implicits._
     val key = loginInfo.providerID
     val field = loginInfo.providerKey
     val json = Json.toJson(authInfo).toString()
@@ -40,7 +40,6 @@ object UserRedisKey {
   }
 
   def apply(user: UserIdentity): WriteKey = {
-    import auth.Implicits._
     val key: String = createKey(user.loginInfo)
     val value = Json.toJson(user).toString()
     WriteKey(key, value)
