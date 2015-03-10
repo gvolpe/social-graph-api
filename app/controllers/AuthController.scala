@@ -1,7 +1,7 @@
 package controllers
 
 import auth.Implicits._
-import auth.module.{AuthenticatorIdentityModule, DefaultAuthenticatorIdentityModule, JWTAuthenticatorController}
+import auth.module.{RedisAuthenticatorIdentityModule, AuthenticatorIdentityModule, DefaultAuthenticatorIdentityModule, JWTAuthenticatorController}
 import auth.role.{Admin, WithRole}
 import auth.{SignUp, Token}
 import com.mohiva.play.silhouette.api.exceptions.AuthenticationException
@@ -14,7 +14,7 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 
-object AuthController extends BaseAuthController with DefaultAuthenticatorIdentityModule
+object AuthController extends BaseAuthController with RedisAuthenticatorIdentityModule
 
 trait BaseAuthController extends JWTAuthenticatorController {
 

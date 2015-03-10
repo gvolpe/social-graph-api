@@ -16,7 +16,8 @@ libraryDependencies ++= Seq(
   "org.anormcypher" %% "anormcypher" % "0.6.0",
   "com.mohiva" %% "play-silhouette" % silhouetteVersion,
   "com.livestream" %% "scredis" % "2.0.6",
-  "com.mohiva" %% "play-silhouette-testkit" % silhouetteVersion % "test"
+  "com.mohiva" %% "play-silhouette-testkit" % silhouetteVersion % "test",
+  "com.newrelic.agent.java" % "newrelic-agent" % "3.14.0"
 )
 
 ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := ".*Neo4JConnection.*;.*RedisConnectionManager.*;.*Redis.*Repository.*;.*Redis.*Module.*;.*Neo.*Repository.*;.*index.*;.*main.*;.*Reverse.*;.*Routes.*"
