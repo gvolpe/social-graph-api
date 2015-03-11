@@ -8,6 +8,7 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
 import com.mohiva.play.silhouette.test._
 import org.specs2.mutable._
+import play.api.DefaultGlobal
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers, WithApplication}
@@ -17,7 +18,8 @@ class AuthControllerSpec extends Specification {
   val baseUser = UserIdentity(Set(), LoginInfo("baseuser", "baseuser@github.com"))
   val simpleUser = UserIdentity(Set(SimpleUser), LoginInfo("noadmin", "noadmin@github.com"))
   val admin = UserIdentity(Set(Admin), LoginInfo("admin", "admin@github.com"))
-  implicit val fakeEnv = FakeEnvironment[UserIdentity, JWTAuthenticator](Seq(admin.loginInfo -> admin))
+  val credentials = Seq(simpleUser.loginInfo -> simpleUser, admin.loginInfo -> admin)
+  implicit val fakeEnv = FakeEnvironment[UserIdentity, JWTAuthenticator](credentials)
 
   class DefaultAuthController extends BaseAuthController with DefaultAuthenticatorIdentityModule
   class FakeAuthController extends BaseAuthController with DefaultAuthenticatorIdentityModule {
@@ -186,6 +188,13 @@ class AuthControllerSpec extends Specification {
       val result2 = controller.signIn(fakeRequest)
 
       status(result2) must be_==(UNAUTHORIZED)
+    }
+
+    "Global on Error" in new WithApplication {
+      val fakeRequest = FakeRequest(Helpers.GET, controllers.routes.AuthController.adminAction().url)
+      val result = play.api.Play.current.global.onError(fakeRequest, new IllegalArgumentException("Testing onError."))
+
+      status(result) must be_==(INTERNAL_SERVER_ERROR)
     }
 
   }

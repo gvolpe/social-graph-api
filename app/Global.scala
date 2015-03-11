@@ -41,10 +41,7 @@ object Global extends GlobalSettings with SecuredSettings {
    * will be called. The default is to use the internal framework error page:
    */
   override def onError(request: RequestHeader, ex: Throwable) = {
-    // TODO: Log exception (ex.getMessage)
-    Future.successful {
-      InternalServerError(Json.toJson("Please, Contact Developers."))
-    }
+    Future.successful { InternalServerError(Json.toJson("Please, Contact Developers.")) }
   }
 
 }
