@@ -7,7 +7,7 @@ import play.api.Play.current
 
 trait NeoBaseRepository {
 
-  implicit val connection = Neo4JConnection(default = true)
+  implicit val connection = Neo4JConnection()
   implicit val neoExecutionContext = Akka.system.dispatchers.lookup("neo-execution-context")
 
   val socialTag = "Social"
