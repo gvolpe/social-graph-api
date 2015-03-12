@@ -1,13 +1,14 @@
 package controllers
 
-import auth.module.{AuthenticatorIdentityModule, DefaultAuthenticatorIdentityModule, JWTAuthenticatorController}
-import model._
+import auth.module.{AuthenticatorIdentityModule, JWTAuthenticatorController, RedisAuthenticatorIdentityModule}
 import model.User._
+import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import repository.{NeoUserRepositoryProvider, UserRepository}
 
-object UserController extends BaseUserController with DefaultAuthenticatorIdentityModule with NeoUserRepositoryProvider
+object UserController extends BaseUserController
+  with RedisAuthenticatorIdentityModule with NeoUserRepositoryProvider
 
 trait BaseUserController extends JWTAuthenticatorController {
 

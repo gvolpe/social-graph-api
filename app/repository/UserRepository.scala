@@ -2,7 +2,6 @@ package repository
 
 import model.{UserCreation, User}
 import org.anormcypher._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
 

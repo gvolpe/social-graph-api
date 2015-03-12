@@ -4,7 +4,6 @@ import auth.Implicits._
 import auth.UserIdentity
 import auth.repository.redis.{WriteKey, ReadKey, RedisConnectionManager, UserRedisKey}
 import com.mohiva.play.silhouette.api.LoginInfo
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 
 import scala.concurrent.Future
@@ -19,6 +18,8 @@ trait UserIdentityRepository {
 
 trait DefaultUserIdentityRepository extends UserIdentityRepository {
 
+  import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
   def find(loginInfo: LoginInfo): Future[Option[UserIdentity]] = Future {
     InMemoryData.usersIdentity.get(loginInfo)
   }
@@ -32,6 +33,7 @@ trait DefaultUserIdentityRepository extends UserIdentityRepository {
 trait RedisUserIdentityRepository extends UserIdentityRepository {
 
   val redis = RedisConnectionManager.connection
+  import redis.dispatcher
 
   def find(loginInfo: LoginInfo): Future[Option[UserIdentity]] = {
     val redisInfo: ReadKey = UserRedisKey(loginInfo)

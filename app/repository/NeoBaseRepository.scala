@@ -2,10 +2,13 @@ package repository
 
 import model.User
 import org.anormcypher.{CypherResultRow, CypherStatement}
+import play.api.libs.concurrent.Akka
+import play.api.Play.current
 
 trait NeoBaseRepository {
 
   implicit val connection = Neo4JConnection(default = true)
+  implicit val neoExecutionContext = Akka.system.dispatchers.lookup("neo-execution-context")
 
   val socialTag = "Social"
 

@@ -5,7 +5,6 @@ import auth.repository.redis.{HashedReadKey, HashedWriteKey, PasswordRedisKey, R
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 
 import scala.concurrent.Future
@@ -44,6 +43,7 @@ trait DefaultPasswordRepository extends PasswordRepository {
 trait RedisPasswordRepository extends PasswordRepository {
 
   val redis = RedisConnectionManager.connection
+  import redis.dispatcher
 
   def savePwd(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
     val redisInfo: HashedWriteKey[String] = PasswordRedisKey(loginInfo, authInfo)
