@@ -17,7 +17,7 @@ class UserControllerSpec extends Specification {
   implicit val fakeEnv = FakeEnvironment[UserIdentity, JWTAuthenticator](Seq(identity.loginInfo -> identity))
 
   class DefaultUserController extends BaseUserController
-  with DefaultAuthenticatorIdentityModule with DefaultUserRepositoryProvider {
+  with DefaultAuthenticatorIdentityModule with DefaultUserRepository {
     override implicit lazy val env = fakeEnv
   }
 

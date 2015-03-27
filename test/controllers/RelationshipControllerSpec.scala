@@ -17,7 +17,7 @@ class RelationshipControllerSpec extends Specification {
   implicit val fakeEnv = FakeEnvironment[UserIdentity, JWTAuthenticator](Seq(identity.loginInfo -> identity))
 
   class DefaultRelationshipController extends BaseRelationshipController
-  with DefaultAuthenticatorIdentityModule with DefaultRelationshipRepositoryProvider {
+  with DefaultAuthenticatorIdentityModule with DefaultRelationshipRepository {
     override implicit lazy val env = fakeEnv
   }
 
