@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Social Graph API by gvolpe</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Social Graph API</h1>
+        <h2>Social Graph API</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/gvolpe/social-graph-api/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/gvolpe/social-graph-api/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/gvolpe/social-graph-api" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="social-graph-api" class="anchor" href="#social-graph-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>social-graph-api</h1>
+
+<p><a href="http://travis-ci.org/gvolpe/social-graph-api"><img src="https://travis-ci.org/gvolpe/social-graph-api.svg" alt="Build Status"></a>
+<a href="https://coveralls.io/r/gvolpe/social-graph-api"><img src="https://coveralls.io/repos/gvolpe/social-graph-api/badge.svg" alt="Coverage Status"></a>
+<a href="http://waffle.io/gvolpe/social-graph-api"><img src="https://badge.waffle.io/gvolpe/social-graph-api.svg?label=ready&amp;title=Ready" alt="Stories in Ready"></a>
+<a href="https://www.codacy.com/public/volpegabriel/social-graph-api"><img src="https://www.codacy.com/project/badge/f451c26222064b579c38a946d7c120c4" alt="Codacy Badge"></a>
+<a href="https://social-graph-api.herokuapp.com"><img src="https://img.shields.io/badge/try-social--graph--api-red.svg" alt="Try at Heroku"></a></p>
+
+<p>This is an open source Social Graph API licensed under the Apache 2 license, quoted below.</p>
+
+<p>Continuous Delivery: <a href="https://codeship.com/projects/67002"><img src="https://codeship.com/projects/0e48e1b0-a659-0132-6336-6e28cb00536c/status?branch=deploy" alt="Codeship Status for gvolpe/social-graph-api"></a></p>
+
+<h2>
+<a id="about-the-project" class="anchor" href="#about-the-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>About the project</h2>
+
+<p>Social Graph API (SGA) was built on top of <a href="https://www.playframework.com/">Play! Framework</a>.</p>
+
+<p>You can see a <a href="https://social-graph-api.herokuapp.com">live demo</a> deployed at Heroku.</p>
+
+<h2>
+<a id="authentication" class="anchor" href="#authentication" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authentication</h2>
+
+<p>SGA uses <a href="http://silhouette.mohiva.com/">Silhouette</a> with the JWTAuthenticator (Json Web Token) to secure the API.
+To save the data of the authentication layer uses <a href="http://redis.io">Redis</a>.</p>
+
+<h2>
+<a id="social-graph-store" class="anchor" href="#social-graph-store" aria-hidden="true"><span class="octicon octicon-link"></span></a>Social Graph Store</h2>
+
+<p>SGA uses <a href="http://neo4j.com">Neo4j</a> as a graph store.
+As a Scala client library uses <a href="http://anormcypher.org/">AnormCypher</a>.</p>
+
+<h2>
+<a id="authentication-api-usage" class="anchor" href="#authentication-api-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authentication API usage</h2>
+
+<h3>
+<a id="sign-up" class="anchor" href="#sign-up" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sign Up</h3>
+
+<p>Request:</p>
+
+<pre><code>curl -X POST -H "Content-Type: application/json" -d '{ "identifier": "gvolpe@github.com", "password":"123456" }' https://&lt;HOST&gt;/auth/signup
+</code></pre>
+
+<p>Responses:</p>
+
+<ul>
+<li>200: Ok       --&gt; Sign up ok</li>
+<li>209: Conflict --&gt; User already exists</li>
+</ul>
+
+<h3>
+<a id="sign-in" class="anchor" href="#sign-in" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sign In</h3>
+
+<pre><code>curl -X POST -H "Content-Type: application/json" -d '{ "identifier": "gvolpe@github.com", "password":"123456" }' https://&lt;HOST&gt;/auth/signup
+</code></pre>
+
+<p>Responses:</p>
+
+<ul>
+<li>200: Ok           --&gt; Sign in ok</li>
+<li>401: Unauthorized --&gt; Wrong user and/or password</li>
+</ul>
+
+<p>When Sign Up and/or Sign In http response code is 200 the response body is like this:</p>
+
+<div class="highlight highlight-json"><pre>{
+  <span class="pl-s"><span class="pl-pds">"</span>token<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0MjU1NDExMTEsInN1YiI6ImU5MmIyNDA1NTQ5YzUzZWM3NWExZWMyYWFjYTllZTViMGQ0MWFkNDNmZmJkOTk0YzQzMmEzY2E4ZjhmODhlM2FkN2RjMjhiZmUwOWE5NzEyNWU3Y2I0YzcxNGY3NzAzOGQxNGQxMzlkOWY4NmEyZGQxMDRkNjkwMmU3MTQ4YzdhIiwiaXNzIjoicGxheS1zaWxob3VldHRlIiwianRpIjoiYmE1ZDE5NDMxODY2MzY1NzJhMDgwNzhlNmYwYTZlOGJiOWFjOGJlNzFlMmI0N2Y1NmM1MjQzZjc1MTcyOTQyZmVkMzdlZTRjZWZiNTM0M2ZmYzlkZThlN2JkNjRlMzdkNDE5Mjk3NmM4ZjI0ZjJhNDA5ZTBiOTZhNTMyOTQ3NmM5YzU0NjRiODgxNjUzZWJmY2Q1MzNkN2QyMDIxMzVmODEzZjE1YTBmZTk3OTYzZjczZDYxMmM3ZjcwMTljODIzYzA0OTUzYTJkYjIzZWY0MmY2NzUzZDExN2EzN2QyZjJhMmE5YzAxYzgwZjkzNTUwZjBkZmY3ZGRmYmE0N2FlMiIsImlhdCI6MTQyNTQ5NzkxMX0.ySOKjDPhX2Ghw5ZvWq9A_1BlW2oLl12ncEjzMCY5-ow<span class="pl-pds">"</span></span>,
+  <span class="pl-s"><span class="pl-pds">"</span>expiresAt<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>2015-03-05T04:38:31.795-03:00<span class="pl-pds">"</span></span>
+}</pre></div>
+
+<h2>
+<a id="users-api-usage" class="anchor" href="#users-api-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Users API usage</h2>
+
+<h3>
+<a id="retrieve-all-the-users" class="anchor" href="#retrieve-all-the-users" aria-hidden="true"><span class="octicon octicon-link"></span></a>Retrieve all the users</h3>
+
+<h4>
+<a id="get-apiv1users" class="anchor" href="#get-apiv1users" aria-hidden="true"><span class="octicon octicon-link"></span></a>GET /api/v1/users</h4>
+
+<p>Request:</p>
+
+<pre><code>curl -X GET -H 'X-Auth-Token:hash3d-t0k3n' https://&lt;HOST&gt;/api/v1/users
+</code></pre>
+
+<p>Response:</p>
+
+<div class="highlight highlight-json"><pre>[
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span>: <span class="pl-c1">5</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>username<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>foobar<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>foobar@github.com<span class="pl-pds">"</span></span>
+  },
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span>: <span class="pl-c1">6</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>username<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>gvolpe<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>gvolpe@github.com<span class="pl-pds">"</span></span>
+  },
+  <span class="pl-ii">...</span>
+]</pre></div>
+
+<h3>
+<a id="retrieve-user-by-id" class="anchor" href="#retrieve-user-by-id" aria-hidden="true"><span class="octicon octicon-link"></span></a>Retrieve user by Id</h3>
+
+<h4>
+<a id="get-apiv1usersid" class="anchor" href="#get-apiv1usersid" aria-hidden="true"><span class="octicon octicon-link"></span></a>GET /api/v1/users/{id}</h4>
+
+<p>Request:</p>
+
+<pre><code>curl -X GET -H 'X-Auth-Token:hash3d-t0k3n' https://&lt;HOST&gt;/api/v1/users/6
+</code></pre>
+
+<p>Response:</p>
+
+<div class="highlight highlight-json"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span>: <span class="pl-c1">6</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>username<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>gvolpe<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>gvolpe@github.com<span class="pl-pds">"</span></span>
+}</pre></div>
+
+<h3>
+<a id="create-an-user" class="anchor" href="#create-an-user" aria-hidden="true"><span class="octicon octicon-link"></span></a>Create an user</h3>
+
+<h4>
+<a id="post-apiv1users" class="anchor" href="#post-apiv1users" aria-hidden="true"><span class="octicon octicon-link"></span></a>POST /api/v1/users</h4>
+
+<pre><code>curl -X POST -H 'X-Auth-Token:hash3d-t0k3n' -H "Content-Type: application/json" -d '{ "username": "gvolpe", "email": "gvolpe@github.com" }' https://&lt;HOST&gt;/api/v1/users
+</code></pre>
+
+<h3>
+<a id="delete-an-user-and-his-relationships" class="anchor" href="#delete-an-user-and-his-relationships" aria-hidden="true"><span class="octicon octicon-link"></span></a>Delete an user and his relationships</h3>
+
+<h4>
+<a id="delete-apiv1usersid" class="anchor" href="#delete-apiv1usersid" aria-hidden="true"><span class="octicon octicon-link"></span></a>DELETE /api/v1/users/{id}</h4>
+
+<pre><code>curl -X DELETE -H 'X-Auth-Token:hash3d-t0k3n' https://&lt;HOST&gt;/api/v1/users/3
+</code></pre>
+
+<h2>
+<a id="social-graph-api-usage" class="anchor" href="#social-graph-api-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Social Graph API usage</h2>
+
+<h3>
+<a id="retrieve-followers-by-id" class="anchor" href="#retrieve-followers-by-id" aria-hidden="true"><span class="octicon octicon-link"></span></a>Retrieve followers by Id</h3>
+
+<h4>
+<a id="get-apiv1followersid" class="anchor" href="#get-apiv1followersid" aria-hidden="true"><span class="octicon octicon-link"></span></a>GET /api/v1/followers/{id}</h4>
+
+<p>Request:</p>
+
+<pre><code>curl -X GET -H 'X-Auth-Token:hash3d-t0k3n' https://&lt;HOST&gt;/api/v1/followers/4
+</code></pre>
+
+<p>Response:</p>
+
+<div class="highlight highlight-json"><pre>[
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span>: <span class="pl-c1">5</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>username<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>foobar<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>foobar@github.com<span class="pl-pds">"</span></span>
+  }
+]</pre></div>
+
+<h3>
+<a id="retrieve-friends-aka-following-by-id" class="anchor" href="#retrieve-friends-aka-following-by-id" aria-hidden="true"><span class="octicon octicon-link"></span></a>Retrieve friends (AKA following) by Id</h3>
+
+<h4>
+<a id="get-apiv1friendsid" class="anchor" href="#get-apiv1friendsid" aria-hidden="true"><span class="octicon octicon-link"></span></a>GET /api/v1/friends/{id}</h4>
+
+<p>Request:</p>
+
+<pre><code>curl -X GET -H 'X-Auth-Token:hash3d-t0k3n' https://&lt;HOST&gt;/api/v1/friends/2
+</code></pre>
+
+<p>Response:</p>
+
+<div class="highlight highlight-json"><pre>[
+  {
+    <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span>: <span class="pl-c1">3</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>username<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>gvolpe<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>gvolpe@github.com<span class="pl-pds">"</span></span>
+  }
+]</pre></div>
+
+<h3>
+<a id="create-a-friendship" class="anchor" href="#create-a-friendship" aria-hidden="true"><span class="octicon octicon-link"></span></a>Create a friendship</h3>
+
+<p>It creates a FRIEND relationship from A to B and a FOLLOWER relationship from B to A.</p>
+
+<h4>
+<a id="post-apiv1friendship" class="anchor" href="#post-apiv1friendship" aria-hidden="true"><span class="octicon octicon-link"></span></a>POST /api/v1/friendship</h4>
+
+<pre><code>curl -X POST -H 'X-Auth-Token:hash3d-t0k3n' -H "Content-Type: application/json" -d '{ "me": 7, "friend": 3 }' https://&lt;HOST&gt;/api/v1/friendship
+</code></pre>
+
+<h3>
+<a id="delete-a-friendship" class="anchor" href="#delete-a-friendship" aria-hidden="true"><span class="octicon octicon-link"></span></a>Delete a friendship</h3>
+
+<p>Delete FRIEND and FOLLOWER relationships between two users.</p>
+
+<h4>
+<a id="delete-apiv1friendship" class="anchor" href="#delete-apiv1friendship" aria-hidden="true"><span class="octicon octicon-link"></span></a>DELETE /api/v1/friendship</h4>
+
+<pre><code>curl -X DELETE -H 'X-Auth-Token:hash3d-t0k3n' -H "Content-Type: application/json" -d '{ "me": 7, "friend": 3 }' https://&lt;HOST&gt;/api/v1/friendship
+</code></pre>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this project except in compliance with
+the License. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>.</p>
+
+<p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
+language governing permissions and limitations under the License.</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
